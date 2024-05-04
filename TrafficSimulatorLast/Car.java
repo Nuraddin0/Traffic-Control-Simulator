@@ -14,6 +14,7 @@ public class Car extends Pane {
 	private double xLength = 30;
 	private double yLength = 10;
 	private boolean stopped;
+	private int pathNo;
 	
 	private Rectangle collider = new Rectangle(10,12); //Checking for stop
 
@@ -23,7 +24,7 @@ public class Car extends Pane {
 	private Rectangle rect = new Rectangle(xLength, yLength);
 	public PathTransition pt = new PathTransition();
 
-	public Car(Path path, double pathLength) {
+	public Car(Path path, double pathLength, int pathNo) {
 		this.getChildren().addAll(rect,collider);
 		collider.setTranslateX(25);
 		collider.setTranslateY(-1);
@@ -31,6 +32,7 @@ public class Car extends Pane {
 		collider.setOpacity(0.8);
 		pt.setNode(this);
 		pt.setPath(path);
+		this.pathNo = pathNo;
 		pt.setDuration(Duration.millis(pathLength * 15));
 		pt.setInterpolator(Interpolator.LINEAR);
 		pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
@@ -38,6 +40,8 @@ public class Car extends Pane {
 			@Override
 			public void handle(long now) {
 				System.out.println(rect.getLocalToSceneTransform().getTx());
+				
+				//stop at traffic lights
 				if (!stopped) {
 					double frontX;
 					double frontY;
@@ -89,7 +93,35 @@ public class Car extends Pane {
 						pt.play();
 					}
 				}
-
+				
+				
+				// stop at back of stopped cars
+				double x = collider.getLocalToSceneTransform().getTx();
+				double y = collider.getLocalToSceneTransform().getTy();
+				double a = 10;
+				double b = 12;
+				
+				double p1x = x;
+				double p1y = y;
+				
+				double p2x = x + Math.cos(Math.toRadians(getRotate()))*a;
+				double p2y = y + Math.sin(Math.toRadians(getRotate()))*a;
+				
+				double p3x = x + Math.cos(Math.toRadians(getRotate()))*a-Math.sin(Math.toRadians(getRotate()))*b;
+				double p3y = y + Math.sin(Math.toRadians(getRotate()))*a + Math.cos(Math.toRadians(getRotate()))*b;
+				
+				double p4x = x - Math.sin(Math.toRadians(getRotate()))*b;
+				double p4y = y + Math.cos(Math.toRadians(getRotate()))*b;
+				
+				for(int i = 0; i < Main.cars.size(); i++) {
+					if(pathNo == Main.cars.get(i).getPathNo()) {
+						
+					}
+				}
+				if(!stopped) {
+					
+				}
+				
 			}
 		};
 		timer.start();
@@ -97,6 +129,7 @@ public class Car extends Pane {
 		pt.setOnFinished(e -> {
 			Main.finishedCars++;
 			Main.a.getChildren().remove(this);
+			Main.cars.remove(this);
 		});
 		pt.play();
 	}
@@ -127,5 +160,9 @@ public class Car extends Pane {
 
 	public PathTransition getPt() {
 		return pt;
+	}
+
+	public int getPathNo() {
+		return pathNo;
 	}
 }

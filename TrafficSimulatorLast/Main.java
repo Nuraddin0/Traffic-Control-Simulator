@@ -32,6 +32,7 @@ public class Main extends Application  {
 	
     public static Path[] paths = new Path[0];
     public static ArrayList<TrafficLight> lights = new ArrayList<>();
+    public static ArrayList<Car> cars = new ArrayList<Car>();
     
     public static double[] pathsLength;
     public static int finishedCars; //count of car which reached finished
@@ -242,6 +243,7 @@ public class Main extends Application  {
 			Car newCar = spawnCar(pathCount);
 			if(newCar != null) {
 				a.getChildren().add(newCar);
+				cars.add(newCar);
 				
 			}
 		}));
@@ -255,7 +257,7 @@ public class Main extends Application  {
 	public static Car spawnCar(int pathCount) {
 		if(Math.random() < 1) {
 			int randomPath = ((int)(Math.random()*pathCount));
-			return new Car(paths[randomPath], pathsLength[randomPath]);
+			return new Car(paths[randomPath], pathsLength[randomPath], randomPath);
 		} 
 		return null;
 	}
