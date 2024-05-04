@@ -34,7 +34,7 @@ public class Main extends Application  {
     public static ArrayList<TrafficLight> lights = new ArrayList<>();
     
     public static double[] pathsLength;
-    public static int finishedCars;
+    public static int finishedCars; //count of car which reached finished
     public static SuperPane a;
 	
 	@Override
