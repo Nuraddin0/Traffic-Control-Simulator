@@ -25,6 +25,7 @@ public class SuperPane extends Pane{
 				Rectangle rect = new Rectangle(i*gridWidth,j*gridHeight,gridWidth,gridHeight);
 				rect.setStroke(Color.GREY);
 				rect.setStrokeWidth(0.5);
+				rect.setOpacity(0.8);
 				rect.setFill(Color.DEEPSKYBLUE);
 				this.getChildren().add(rect);
 			}
