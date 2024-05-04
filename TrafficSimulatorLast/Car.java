@@ -15,7 +15,7 @@ public class Car extends Pane {
 	private double yLength = 10;
 	private boolean stopped;
 	
-	private Rectangle collider = new Rectangle(10,12);
+	private Rectangle collider = new Rectangle(10,12); //Checking for stop
 
 
 	private TrafficLight stoppedTraficLight;
