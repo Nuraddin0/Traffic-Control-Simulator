@@ -1,4 +1,5 @@
 
+import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -25,6 +26,7 @@ public class TrafficLight extends Pane {
 		line.setStroke(Color.BLACK);
 		circle = new Circle((x2 - x1) / 2, (y2 - y1) / 2, radius);
 		circle.setFill(Color.GREEN);
+		circle.setCursor(Cursor.HAND);
 		this.getChildren().addAll(line, circle);
 		this.setTranslateX(x1);
 		this.setTranslateY(y1);

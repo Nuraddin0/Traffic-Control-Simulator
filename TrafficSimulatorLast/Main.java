@@ -12,6 +12,7 @@ import javafx.application.Application;
 
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -46,17 +47,24 @@ public class Main extends Application  {
         
         mediaPlayer.setVolume(0.5);
         
-       mediaPlayer.play();
-       mediaPlayer.setOnEndOfMedia(() -> {
-    	    System.out.println("End of media reached");
+        mediaPlayer.play();
+        mediaPlayer.setOnEndOfMedia(() -> {
+        	System.out.println("End of media reached");
     	    mediaPlayer.seek(Duration.ZERO);
     	});
+        
+        
+		//------------------------------------
+        primaryStage.setOnCloseRequest(event -> {
+        	mediaPlayer.stop();
+        });
 		openMainMenu(primaryStage);
-	    Image icon = new Image("/icon_.png"); 
+	    Image icon = new Image("images/icon_.png"); 
 		primaryStage.setTitle("Traffic Control Simulator");
 		primaryStage.getIcons().add(icon);
 		primaryStage.setResizable(false);
 	    primaryStage.show();
+	    
 	}
 	
 	public static void main(String[] args) {
@@ -64,15 +72,15 @@ public class Main extends Application  {
 	}
 	public static void openMainMenu(Stage primaryStage) {
 		Pane mainMenu = new Pane();
-		ImageView bg = new ImageView(new Image("anaMenu.jpg"));
+		ImageView bg = new ImageView(new Image("images/anaMenu.jpg"));
 		bg.setFitHeight(mainMenu.getHeight());
 		bg.setFitWidth(mainMenu.getWidth());
 	    
 		
-		ImageView header = new ImageView(new Image("/tcs.png"));
+		ImageView header = new ImageView(new Image("images/tcs.png"));
 		header.setX(100);
-		ImageView startGame = new ImageView(new Image("/Start-Game.png"));
-		ImageView exitGame = new ImageView(new Image("/Exit.png"));
+		ImageView startGame = new ImageView(new Image("images/Start-Game.png"));
+		ImageView exitGame = new ImageView(new Image("images/Exit.png"));
 		
 		startGame.setFitHeight(45*1.5);
 		startGame.setFitWidth(160*1.5);
@@ -91,13 +99,20 @@ public class Main extends Application  {
 		Scene sceneMainMenu = new Scene(mainMenu, 800, 800);
         primaryStage.setScene(sceneMainMenu);
 		
-	    exitGame.setOnMouseClicked(e -> {
+        startGame.setCursor(Cursor.HAND);
+        exitGame.setCursor(Cursor.HAND);
+        
+        exitGame.setOnMouseClicked(e -> {
 	    	Rectangle rec = new Rectangle();
+	    	rec.setStrokeWidth(2.5);
+	    	rec.setStroke(Color.BLACK);
 	    	rec.setFill(Color.DARKORANGE);
 	    	rec.setWidth(300);
 	    	rec.setHeight(100);
 	    	rec.setX(250);
 	    	rec.setY(350);
+	    	rec.setArcHeight(10);
+	    	rec.setArcWidth(10);
 	    	
 	    	Label text = new Label();
 	    	text.setText("Are you really sure you want to exit?");
@@ -106,16 +121,19 @@ public class Main extends Application  {
 	    	text.setLayoutY(355);
 	    	
 	    	Button btYes = new Button("Yes");
-	    	btYes.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
+	    	btYes.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: red; -fx-font-weight: bold;");
 	    	btYes.setLayoutX(330);
-	    	btYes.setLayoutY(420);
+	    	btYes.setLayoutY(410);
 	    	
 	    	Button btNo = new Button("No");
-	    	btNo.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
+	    	btNo.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: green; -fx-font-weight: bold;");
 	    	btNo.setLayoutX(450);
-	    	btNo.setLayoutY(420);
+	    	btNo.setLayoutY(410);
 	    	
 	    	mainMenu.getChildren().addAll(rec, text, btYes, btNo);
+	    	
+	    	btYes.setCursor(Cursor.HAND);
+	    	btNo.setCursor(Cursor.HAND);
 	    	
 	    	btYes.setOnMouseEntered(event -> {
 	    		Random rand = new Random();
@@ -136,16 +154,19 @@ public class Main extends Application  {
          });    
 	}
 	
-	public static Scene openLevel(String levelName) throws FileNotFoundException {
+	public static Scene openLevel(String levelName) {
 		
 		ArrayList<RoadTile> roadtiles = new ArrayList<>();
         ArrayList<Building> buildings = new ArrayList<>();
-        
-
-        
+       
         File file = new File(levelName);
-        Scanner scan = new Scanner(file);
-        MetaData meta = null ;
+        Scanner scan = null;
+		try {
+			scan = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        MetaData meta = null;
         
 		double previousPathX = 0;
 		double previousPathY = 0;
@@ -267,24 +288,24 @@ public class Main extends Application  {
 		Pane levelPane = new Pane();
 		Scene levelMenu = new Scene(levelPane, 800, 800);
 		
-		ImageView bg = new ImageView(new Image("anaMenu.jpg"));
+		ImageView bg = new ImageView(new Image("images/anaMenu.jpg"));
 		bg.setFitHeight(levelMenu.getHeight());
 		bg.setFitWidth(levelMenu.getWidth());
 		
-		ImageView header = new ImageView(new Image("/Select-Level.png"));
+		ImageView header = new ImageView(new Image("images/Select-Level.png"));
 		header.setX(200);
 		header.setY(100);
 		
-		ImageView back = new ImageView(new Image("/back.png"));
+		ImageView back = new ImageView(new Image("images/back.png"));
 		
 		back.setX(0);
 		back.setY(800-51);
 		
-		ImageView level1 = new ImageView(new Image("/Level-1.png"));
-		ImageView level2 = new ImageView(new Image("/Level-2.png"));
-		ImageView level3 = new ImageView(new Image("/Level-3.png"));
-		ImageView level4 = new ImageView(new Image("/Level-4.png"));
-		ImageView level5 = new ImageView(new Image("/Level-5.png"));
+		ImageView level1 = new ImageView(new Image("images/Level-1.png"));
+		ImageView level2 = new ImageView(new Image("images/Level-2.png"));
+		ImageView level3 = new ImageView(new Image("images/Level-3.png"));
+		ImageView level4 = new ImageView(new Image("images/Level-4.png"));
+		ImageView level5 = new ImageView(new Image("images/Level-5.png"));
 
 		level1.setX(50);
 		level1.setY(300);
@@ -301,71 +322,93 @@ public class Main extends Application  {
 		level5.setX(425);
 		level5.setY(500);
 		
+		Rectangle btLevel1 = new Rectangle(level1.getX()+21, level1.getY()+17, 158, 110);
+		btLevel1.setFill(Color.TRANSPARENT);
+		btLevel1.setRotate(5);
+		
+		Rectangle btLevel2 = new Rectangle(level2.getX()+22, level2.getY()+16, 156, 108);
+		btLevel2.setFill(Color.TRANSPARENT);
+		btLevel2.setRotate(5);
+		
+		Rectangle btLevel3 = new Rectangle(level3.getX()+22, level3.getY()+16, 156, 108);
+		btLevel3.setFill(Color.TRANSPARENT);
+		btLevel3.setRotate(5);
+		
+		Rectangle btLevel4 = new Rectangle(level4.getX()+22, level4.getY()+16, 156, 108);
+		btLevel4.setFill(Color.TRANSPARENT);
+		btLevel4.setRotate(5);
+		
+		Rectangle btLevel5 = new Rectangle(level5.getX()+22, level5.getY()+16, 156, 108);
+		btLevel5.setFill(Color.TRANSPARENT);
+		btLevel5.setRotate(5);
+		
+		back.setCursor(Cursor.HAND);
+		level1.setCursor(Cursor.HAND);
+		level2.setCursor(Cursor.HAND);
+		level3.setCursor(Cursor.HAND);
+		level4.setCursor(Cursor.HAND);
+		level5.setCursor(Cursor.HAND);
+		btLevel1.setCursor(Cursor.HAND);
+		btLevel2.setCursor(Cursor.HAND);
+		btLevel3.setCursor(Cursor.HAND);
+		btLevel4.setCursor(Cursor.HAND);
+		btLevel5.setCursor(Cursor.HAND);
+		
 		back.setOnMouseClicked(e -> {openMainMenu(primaryStage);});
 		
+		btLevel1.setOnMouseClicked(e -> {
+			Scene level = openLevel("levels/level1.txt");
+			primaryStage.setScene(level);
+		});
+		
+		btLevel2.setOnMouseClicked(e -> {
+			Scene level = openLevel("levels/level2.txt");
+			primaryStage.setScene(level);
+		});
+		
+		btLevel3.setOnMouseClicked(e -> {
+			Scene level = openLevel("levels/level3.txt");
+			primaryStage.setScene(level);
+		});
+		
+		btLevel4.setOnMouseClicked(e -> {
+			Scene level = openLevel("levels/level4.txt");
+			primaryStage.setScene(level);
+		});
+		
+		btLevel5.setOnMouseClicked(e -> {
+			Scene level = openLevel("levels/level5.txt");
+			primaryStage.setScene(level);
+		});
+		
 		level1.setOnMouseClicked(e -> {
-			Scene level = null;
-			try {
-				level = openLevel("level1.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Scene level = openLevel("levels/level1.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level2.setOnMouseClicked(e -> {
-			Scene level = null;
-			try {
-				level = openLevel("level2.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Scene level = openLevel("levels/level2.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level3.setOnMouseClicked(e -> {
-			Scene level = null;
-			try {
-				level = openLevel("level3.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Scene level = openLevel("levels/level3.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level4.setOnMouseClicked(e -> {
-			Scene level = null;
-			try {
-				level = openLevel("level4.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Scene level = openLevel("levels/level4.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level5.setOnMouseClicked(e -> {
-			Scene level = null;
-			try {
-				level = openLevel("level5.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Scene level = openLevel("levels/level5.txt");
 			primaryStage.setScene(level);
 		});
-		
+	
 		levelPane.getChildren().add(bg);
-		levelPane.getChildren().add(back);
-		levelPane.getChildren().add(header);
-		levelPane.getChildren().add(level1);
-		levelPane.getChildren().add(level2);
-		levelPane.getChildren().add(level3);
-		levelPane.getChildren().add(level4);
-		levelPane.getChildren().add(level5);
+		levelPane.getChildren().addAll(back, header, level1, level2, level3, level4, level5);
+		levelPane.getChildren().addAll(btLevel1, btLevel2, btLevel3, btLevel4, btLevel5);
 		
 		primaryStage.setScene(levelMenu);
 	}
