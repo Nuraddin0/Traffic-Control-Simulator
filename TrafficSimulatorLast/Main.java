@@ -102,7 +102,15 @@ public class Main extends Application  {
         startGame.setCursor(Cursor.HAND);
         exitGame.setCursor(Cursor.HAND);
         
+        String audioFile = "sounds/button-click-sound.mp3";
+        Media media = new Media(new File(audioFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
         exitGame.setOnMouseClicked(e -> {
+        	
+        	mediaPlayer.seek(Duration.seconds(0));
+        	mediaPlayer.play();
+        	
 	    	Rectangle rec = new Rectangle();
 	    	rec.setStrokeWidth(2.5);
 	    	rec.setStroke(Color.BLACK);
@@ -143,13 +151,21 @@ public class Main extends Application  {
 	    		btYes.setLayoutY(randY);
 	    		
 	    	});
-	    	btYes.setOnMouseClicked(event -> {System.exit(0);});
+	    	btYes.setOnMouseClicked(event -> {
+	    		mediaPlayer.seek(Duration.seconds(0));
+	        	mediaPlayer.play();
+	    		System.exit(0);
+	    	});
 	    	btNo.setOnMouseClicked(event -> {
+	    		mediaPlayer.seek(Duration.seconds(0));
+	        	mediaPlayer.play();
 	    		mainMenu.getChildren().removeAll(rec, text, btYes, btNo);
 	    	});
 	    });
 	    
         startGame.setOnMouseClicked(e -> {
+        	mediaPlayer.seek(Duration.seconds(0));
+        	mediaPlayer.play();
 			levelSelect(primaryStage);
          });    
 	}
@@ -354,54 +370,83 @@ public class Main extends Application  {
 		btLevel4.setCursor(Cursor.HAND);
 		btLevel5.setCursor(Cursor.HAND);
 		
-		back.setOnMouseClicked(e -> {openMainMenu(primaryStage);});
+		String audioFile = "sounds/button-click-sound.mp3";
+        Media media = new Media(new File(audioFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
+		
+		back.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
+			openMainMenu(primaryStage);
+		});
 		
 		btLevel1.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level1.txt");
 			primaryStage.setScene(level);
 		});
 		
 		btLevel2.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level2.txt");
 			primaryStage.setScene(level);
 		});
 		
 		btLevel3.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level3.txt");
 			primaryStage.setScene(level);
 		});
 		
 		btLevel4.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level4.txt");
 			primaryStage.setScene(level);
 		});
 		
 		btLevel5.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level5.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level1.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level1.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level2.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level2.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level3.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level3.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level4.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level4.txt");
 			primaryStage.setScene(level);
 		});
 		
 		level5.setOnMouseClicked(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			Scene level = openLevel("levels/level5.txt");
 			primaryStage.setScene(level);
 		});
