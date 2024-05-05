@@ -6,7 +6,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 
@@ -23,6 +25,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcTo;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -41,6 +44,7 @@ public class Main extends Application  {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
 		String audioFile = "sounds/MainMusic.mp3";
         Media media = new Media(new File(audioFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -52,14 +56,15 @@ public class Main extends Application  {
         	System.out.println("End of media reached");
     	    mediaPlayer.seek(Duration.ZERO);
     	});
-        
-        
-		//------------------------------------
+                
         primaryStage.setOnCloseRequest(event -> {
         	mediaPlayer.stop();
         });
+        
 		openMainMenu(primaryStage);
+		
 	    Image icon = new Image("images/icon_.png"); 
+	    
 		primaryStage.setTitle("Traffic Control Simulator");
 		primaryStage.getIcons().add(icon);
 		primaryStage.setResizable(false);
@@ -71,11 +76,11 @@ public class Main extends Application  {
 		Application.launch(args);
 	}
 	public static void openMainMenu(Stage primaryStage) {
+		
 		Pane mainMenu = new Pane();
 		ImageView bg = new ImageView(new Image("images/anaMenu.jpg"));
 		bg.setFitHeight(mainMenu.getHeight());
 		bg.setFitWidth(mainMenu.getWidth());
-	    
 		
 		ImageView header = new ImageView(new Image("images/tcs.png"));
 		header.setX(100);
@@ -91,6 +96,20 @@ public class Main extends Application  {
 		exitGame.setX(400-exitGame.getFitWidth()/2);
 		exitGame.setY(startGame.getY() +  startGame.getFitHeight() + 15);
 		
+		FadeTransition fadeIn1 = new FadeTransition(Duration.seconds(0.5), startGame);
+    	FadeTransition fadeIn2 = new FadeTransition(Duration.seconds(0.5), exitGame);
+    	FadeTransition fadeIn3 = new FadeTransition(Duration.seconds(0.5), header);
+    	
+    	fadeIn1.setFromValue(0.0);
+    	fadeIn1.setToValue(1.0);
+    	fadeIn2.setFromValue(0.0);
+    	fadeIn2.setToValue(1.0);
+    	fadeIn3.setFromValue(0.0);
+    	fadeIn3.setToValue(1.0);
+    	fadeIn1.play();
+    	fadeIn2.play();
+    	fadeIn3.play();
+    	
 		mainMenu.getChildren().add(bg);
 		mainMenu.getChildren().add(header);
 		mainMenu.getChildren().add(startGame);
@@ -106,6 +125,7 @@ public class Main extends Application  {
         Media media = new Media(new File(audioFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(0.5);
+        
         exitGame.setOnMouseClicked(e -> {
         	
         	mediaPlayer.seek(Duration.seconds(0));
@@ -151,11 +171,13 @@ public class Main extends Application  {
 	    		btYes.setLayoutY(randY);
 	    		
 	    	});
+	    	
 	    	btYes.setOnMouseClicked(event -> {
 	    		mediaPlayer.seek(Duration.seconds(0));
 	        	mediaPlayer.play();
 	    		System.exit(0);
 	    	});
+	    	
 	    	btNo.setOnMouseClicked(event -> {
 	    		mediaPlayer.seek(Duration.seconds(0));
 	        	mediaPlayer.play();
@@ -164,9 +186,27 @@ public class Main extends Application  {
 	    });
 	    
         startGame.setOnMouseClicked(e -> {
+        	
         	mediaPlayer.seek(Duration.seconds(0));
         	mediaPlayer.play();
-			levelSelect(primaryStage);
+        	
+        	FadeTransition fadeOut1 = new FadeTransition(Duration.seconds(0.5), startGame);
+        	FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(0.5), exitGame);
+        	FadeTransition fadeOut3 = new FadeTransition(Duration.seconds(0.5), header);
+        	fadeOut1.setFromValue(1.0);
+        	fadeOut1.setToValue(0.0);
+        	fadeOut2.setFromValue(1.0);
+        	fadeOut2.setToValue(0.0);
+        	fadeOut3.setFromValue(1.0);
+        	fadeOut3.setToValue(0.0);
+        	
+        	fadeOut1.play();
+            fadeOut2.play();
+            fadeOut3.play();
+            
+            fadeOut3.setOnFinished(event -> {
+                levelSelect(primaryStage);
+            });
          });    
 	}
 	
@@ -251,13 +291,11 @@ public class Main extends Application  {
 					previousPathX = pathX;
 					previousPathY = pathY;
 				}
-
 			}
         }
         
         a = new SuperPane(meta.getSceneWidth(),meta.getSceneHeight(),meta.getNumberOfXCell(),meta.getNumberOfYCell());
-        
-     
+
         for(int i = 0 ; i<roadtiles.size() ; i++) {
         	roadtiles.get(i).draw(meta);
         	a.add(roadtiles.get(i), roadtiles.get(i).getGridx(), roadtiles.get(i).getGridy());
@@ -273,7 +311,7 @@ public class Main extends Application  {
         	paths[i].setStroke(Color.RED);
         	a.getChildren().add(paths[i]);
         }
-		
+        
         Scene scene = new Scene(a,meta.getSceneWidth(),meta.getSceneHeight());
         int pathCount = paths.length;
 		Timeline animation = new Timeline(new KeyFrame(Duration.millis(2000), e-> {
@@ -378,7 +416,40 @@ public class Main extends Application  {
 		back.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			openMainMenu(primaryStage);
+			
+			FadeTransition fadeOut1 = new FadeTransition(Duration.seconds(0.5), back);
+			FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(0.5), header);
+			FadeTransition fadeOut3 = new FadeTransition(Duration.seconds(0.5), level1);
+			FadeTransition fadeOut4 = new FadeTransition(Duration.seconds(0.5), level2);
+			FadeTransition fadeOut5 = new FadeTransition(Duration.seconds(0.5), level3);
+			FadeTransition fadeOut6 = new FadeTransition(Duration.seconds(0.5), level4);
+			FadeTransition fadeOut7 = new FadeTransition(Duration.seconds(0.5), level5);
+			fadeOut1.setFromValue(1.0);
+			fadeOut1.setToValue(0.0);
+			fadeOut2.setFromValue(1.0);
+			fadeOut2.setToValue(0.0);
+			fadeOut3.setFromValue(1.0);
+			fadeOut3.setToValue(0.0);
+			fadeOut4.setFromValue(1.0);
+			fadeOut4.setToValue(0.0);
+			fadeOut5.setFromValue(1.0);
+			fadeOut5.setToValue(0.0);
+			fadeOut6.setFromValue(1.0);
+			fadeOut6.setToValue(0.0);
+			fadeOut7.setFromValue(1.0);
+			fadeOut7.setToValue(0.0);
+			
+			fadeOut1.play();
+			fadeOut2.play();
+			fadeOut3.play();
+			fadeOut4.play();
+			fadeOut5.play();
+			fadeOut6.play();
+			fadeOut7.play();
+
+			fadeOut7.setOnFinished(event -> {
+				openMainMenu(primaryStage);
+			});
 		});
 		
 		btLevel1.setOnMouseClicked(e -> {
@@ -450,7 +521,37 @@ public class Main extends Application  {
 			Scene level = openLevel("levels/level5.txt");
 			primaryStage.setScene(level);
 		});
-	
+		FadeTransition fadeIn1 = new FadeTransition(Duration.seconds(0.5), back);
+		FadeTransition fadeIn2 = new FadeTransition(Duration.seconds(0.5), header);
+		FadeTransition fadeIn3 = new FadeTransition(Duration.seconds(0.5), level1);
+		FadeTransition fadeIn4 = new FadeTransition(Duration.seconds(0.5), level2);
+		FadeTransition fadeIn5 = new FadeTransition(Duration.seconds(0.5), level3);
+		FadeTransition fadeIn6 = new FadeTransition(Duration.seconds(0.5), level4);
+		FadeTransition fadeIn7 = new FadeTransition(Duration.seconds(0.5), level5);
+
+		fadeIn1.setFromValue(0.0);
+		fadeIn1.setToValue(1.0);
+		fadeIn2.setFromValue(0.0);
+		fadeIn2.setToValue(1.0);
+		fadeIn3.setFromValue(0.0);
+		fadeIn3.setToValue(1.0);
+		fadeIn4.setFromValue(0.0);
+		fadeIn4.setToValue(1.0);
+		fadeIn5.setFromValue(0.0);
+		fadeIn5.setToValue(1.0);
+		fadeIn6.setFromValue(0.0);
+		fadeIn6.setToValue(1.0);
+		fadeIn7.setFromValue(0.0);
+		fadeIn7.setToValue(1.0);
+		
+		fadeIn1.play();
+		fadeIn2.play();
+		fadeIn3.play();
+		fadeIn4.play();
+		fadeIn5.play();
+		fadeIn6.play();
+		fadeIn7.play();
+
 		levelPane.getChildren().add(bg);
 		levelPane.getChildren().addAll(back, header, level1, level2, level3, level4, level5);
 		levelPane.getChildren().addAll(btLevel1, btLevel2, btLevel3, btLevel4, btLevel5);
