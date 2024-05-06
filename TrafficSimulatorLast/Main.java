@@ -324,7 +324,33 @@ public class Main extends Application  {
 		}));
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.play();
-        
+        back.setOnMouseClicked(e -> {
+			lights.clear();
+			 for(int i = 0 ; i<cars.size() ; i++) {
+					cars.get(i).pt.stop();	    		
+		        }
+			cars.clear();
+			 for(int i = 0 ; i < cars.size() ; i++) {
+			        
+		        	a.getChildren().remove(cars.get(i));
+		        }
+		      for(int i = 0 ; i<roadtiles.size() ; i++) {
+	
+		    		a.getChildren().remove(roadtiles.get(i));
+		        }
+		        for(int i = 0 ; i < buildings.size() ; i++) {
+		        
+		        	a.getChildren().remove(buildings.get(i));
+		        }
+		        for(int i = 0 ; i < lights.size() ; i++) {
+		        	a.getChildren().remove(lights.get(i));
+		        }
+		        for(int i = 0 ; i < paths.length ; i++) {
+		        	a.getChildren().remove(paths[i]);
+		        }
+		    animation.stop(); // Animasyonu durdur
+		    levelSelect(primaryStage); // level seçme menüsüne dön
+		});
 		scan.close();
 		return scene;
 	
