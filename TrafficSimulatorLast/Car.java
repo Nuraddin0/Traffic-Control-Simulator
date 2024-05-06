@@ -40,16 +40,19 @@ public class Car extends Pane {
 		//collider.setOpacity(0.8);
 		pt.setNode(this);
 		pt.setPath(path);
+
 		this.pathNo = pathNo;
 		pt.setDuration(Duration.millis(pathLength * 15));
 		pt.setInterpolator(Interpolator.LINEAR);
 		pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
+		
+		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				
+				System.out.println(rect.getLocalToSceneTransform().getTx());
 				//stop at traffic lights
-				if (!stopped) {
+				if (!stopped) { // aracın ışıktan kaynaklı durma olayı
 					double frontX;
 					double frontY;
 					double middleX;
@@ -97,7 +100,7 @@ public class Car extends Pane {
 				}
 				
 				if(stopped) {
-					if(stoppedTraficLight != null) {
+					if(stoppedTraficLight != null) { // ışık artık yeşilse devam et
 						if(stoppedTraficLight.isRed() == false) {
 							stoppedTraficLight = null;
 							stopped = false;
@@ -126,22 +129,22 @@ public class Car extends Pane {
 				int p4y = (int)(y + Math.cos(Math.toRadians(getRotate()))*b);
 				
 				for(int i = 0; i < Main.cars.size(); i++) {
-					if(Main.cars.get(i) != thisCar && pathNo == Main.cars.get(i).getPathNo()) {
+					if(Main.cars.get(i) != thisCar /* && pathNo == Main.cars.get(i).getPathNo()*/) {
 						
-						if(Math.min(p1x, Math.min(p2x, Math.min(p3x, p4x))) - 5 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
-								 && Math.max(p1x, Math.max(p2x, Math.max(p3x, p4x))) + 5 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
-								 && Math.min(p1y, Math.min(p2y, Math.min(p3y, p4y))) - 5 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()
-								 && Math.max(p1y, Math.max(p2y, Math.max(p3y, p4y))) + 5 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()) {
+						if(Math.min(p1x, Math.min(p2x, Math.min(p3x, p4x))) - 3 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
+								 && Math.max(p1x, Math.max(p2x, Math.max(p3x, p4x))) + 3 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
+								 && Math.min(p1y, Math.min(p2y, Math.min(p3y, p4y))) - 3 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()
+								 && Math.max(p1y, Math.max(p2y, Math.max(p3y, p4y))) + 3 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()) {
 							//System.out.printf("p1x:%f - p1y:%f - p2x:%f - p2y:%f - p3x:%f - p3y:%f - p4x:%f - p4y:%f *-* cx:%f - cy:%f\n", p1x,p1y,p2x,p2y,p3x,p3y,p4x,p4y,Main.cars.get(i).getRect().getLocalToSceneTransform().getTx(),Main.cars.get(i).getRect().getLocalToSceneTransform().getTy());
 							if(Main.cars.get(i).stopped) {
 								stoppedCar = Main.cars.get(i);
 								stopped = true;
 								pt.pause();
-								if(!firstControll) {
+								if(!firstControll) {// trafik sıkışıksa araç spawn etme
 									Main.cars.remove(thisCar);
 									Main.a.getChildren().remove(thisCar);
 								}
-								break;
+								break; // kendi pathinde olmayan araç spawn edildiğinde hareket etmesin diye direkt olarak for'dan çık ve diğer araçları kontrol etme 
 							}
 						}
 						else if(stopped){
@@ -154,10 +157,31 @@ public class Car extends Pane {
 					}
 
 				}
-				if(!stopped) {
-					
+			  
+				for(int i = 0 ; i < Main.cars.size(); i++) {
+					int index =  0 ; 
+					if(Main.cars.get(i)!= thisCar) {							
+					  boolean intersects = thisCar.localToScene(thisCar.getBoundsInLocal()).intersects(Main.cars.get(i).localToScene(Main.cars.get(i).getBoundsInLocal()));
+					  if(intersects) {					  
+					         thisCar.pt.stop();
+					         Main.cars.get(i).pt.stop();	
+					         Main.a.getChildren().remove(thisCar);
+					         Main.a.getChildren().remove( Main.cars.get(i));
+						    // Main.cars.remove(thisCar);
+						     //Main.cars.remove( Main.cars.get(i));
+					         Main.cars.set(index,null);
+					         Main.cars.remove(index);
+					         Main.cars.set(i, Main.cars.get(i));
+					         Main.cars.remove(i);
+					    }
+					}
+					else {
+						index = i ; 
+					}
 				}
-				if(!firstControll) {
+				
+				
+				if(!firstControll) { // trafik sıkışıksa araç spawn etme
 					firstControllCounter++;
 					if(firstControllCounter >= 10) {
 						firstControll = true;
@@ -174,7 +198,7 @@ public class Car extends Pane {
 			Main.a.getChildren().remove(this);
 			Main.cars.remove(this);
 		});
-		pt.play();
+		pt.play();// araç dümdüz gitsin
 	}
 
 	public boolean isStopped() {
