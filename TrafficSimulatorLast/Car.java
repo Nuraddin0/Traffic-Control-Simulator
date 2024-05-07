@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class Car extends Pane {
+	public static int crashCounter;
 	private double xLength = 30;
 	private double yLength = 10;
 	private boolean stopped;
@@ -50,7 +51,7 @@ public class Car extends Pane {
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				System.out.println(rect.getLocalToSceneTransform().getTx());
+			//	System.out.println(rect.getLocalToSceneTransform().getTx());
 				//stop at traffic lights
 				if (!stopped) { // aracın ışıktan kaynaklı durma olayı
 					double frontX;
@@ -159,25 +160,20 @@ public class Car extends Pane {
 				}
 			  
 				for(int i = 0 ; i < Main.cars.size(); i++) {
-					int index =  0 ; 
-					if(Main.cars.get(i)!= thisCar) {							
-					  boolean intersects = thisCar.localToScene(thisCar.getBoundsInLocal()).intersects(Main.cars.get(i).localToScene(Main.cars.get(i).getBoundsInLocal()));
-					  if(intersects) {					  
+					Car dd  = Main.cars.get(i);
+					if(dd!= thisCar && Main.cars.contains(thisCar)) {							
+					  boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
+					  if(intersects) {
+						     crashCounter++;
 					         thisCar.pt.stop();
-					         Main.cars.get(i).pt.stop();	
-					         Main.a.getChildren().remove(thisCar);
-					         Main.a.getChildren().remove( Main.cars.get(i));
-						    // Main.cars.remove(thisCar);
-						     //Main.cars.remove( Main.cars.get(i));
-					         Main.cars.set(index,null);
-					         Main.cars.remove(index);
-					         Main.cars.set(i, Main.cars.get(i));
-					         Main.cars.remove(i);
+					         dd.pt.stop();
+				             Main.a.getChildren().remove(thisCar);
+					         Main.a.getChildren().remove( dd);
+						     Main.cars.remove( dd);
+						     Main.cars.remove(thisCar);
 					    }
 					}
-					else {
-						index = i ; 
-					}
+			
 				}
 				
 				
