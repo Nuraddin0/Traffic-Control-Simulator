@@ -4,6 +4,7 @@ import javafx.animation.PathTransition;
 import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.Timeline;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
@@ -12,31 +13,33 @@ import javafx.util.Duration;
 
 public class Car extends Pane {
 	public static int crashCounter;
-	private double xLength = 30;
-	private double yLength = 10;
+	private double xLength = 16;
+	private double yLength = 9;
 	private boolean stopped;
 	private int pathNo;
-	
-	private boolean firstControll; //it deletes de car if there is another car at spawn point
-	private int firstControllCounter;
-	
-	private Rectangle collider = new Rectangle(10,12); //Checking for stop
 
+	private boolean firstControll; // it deletes de car if there is another car at spawn point
+	private int firstControllCounter;
+
+	private Rectangle collider = new Rectangle(5, 7); // Checking for stop
 
 	private TrafficLight stoppedTraficLight;
 	private Car stoppedCar;
-	
 
 	private Rectangle rect = new Rectangle(xLength, yLength);
 	public PathTransition pt = new PathTransition();
-	
+
 	private Car thisCar;
 
 	public Car(Path path, double pathLength, int pathNo) {
 		thisCar = this;
 		this.getChildren().addAll(rect,collider);
-		collider.setTranslateX(25);
-		collider.setTranslateY(-1);
+		rect.setArcHeight(5);
+		rect.setArcWidth(5);
+		rect.setArcHeight(5);
+		rect.setArcWidth(5);
+		collider.setTranslateX(15);
+		//collider.setTranslateY(-1);
 		collider.setFill(null);
 		//collider.setOpacity(0.8);
 		pt.setNode(this);
@@ -45,7 +48,7 @@ public class Car extends Pane {
 		this.pathNo = pathNo;
 		pt.setDuration(Duration.millis(pathLength * 15));
 		pt.setInterpolator(Interpolator.LINEAR);
-		pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
+		//pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
 		
 		
 		AnimationTimer timer = new AnimationTimer() {
@@ -135,8 +138,7 @@ public class Car extends Pane {
 						if(Math.min(p1x, Math.min(p2x, Math.min(p3x, p4x))) - 3 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
 								 && Math.max(p1x, Math.max(p2x, Math.max(p3x, p4x))) + 3 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTx()
 								 && Math.min(p1y, Math.min(p2y, Math.min(p3y, p4y))) - 3 < Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()
-								 && Math.max(p1y, Math.max(p2y, Math.max(p3y, p4y))) + 3 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()) {
-							//System.out.printf("p1x:%f - p1y:%f - p2x:%f - p2y:%f - p3x:%f - p3y:%f - p4x:%f - p4y:%f *-* cx:%f - cy:%f\n", p1x,p1y,p2x,p2y,p3x,p3y,p4x,p4y,Main.cars.get(i).getRect().getLocalToSceneTransform().getTx(),Main.cars.get(i).getRect().getLocalToSceneTransform().getTy());
+								 && Math.max(p1y, Math.max(p2y, Math.max(p3y, p4y))) + 3 > Main.cars.get(i).getRect().getLocalToSceneTransform().getTy()) {					
 							if(Main.cars.get(i).stopped) {
 								stoppedCar = Main.cars.get(i);
 								stopped = true;
@@ -150,7 +152,6 @@ public class Car extends Pane {
 						}
 						else if(stopped){
 							if(stoppedTraficLight == null) {
-								System.out.println("A");
 								stopped = false;
 								pt.play();
 							}
@@ -162,15 +163,18 @@ public class Car extends Pane {
 				for(int i = 0 ; i < Main.cars.size(); i++) {
 					Car dd  = Main.cars.get(i);
 					if(dd!= thisCar && Main.cars.contains(thisCar)) {							
-					  boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
-					  if(intersects) {
+						boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
+					  if(intersects && firstControll && dd.firstControll) {
+						  System.out.println("çarpışma oldu ");
 						     crashCounter++;
+						     Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
 					         thisCar.pt.stop();
 					         dd.pt.stop();
 				             Main.a.getChildren().remove(thisCar);
 					         Main.a.getChildren().remove( dd);
 						     Main.cars.remove( dd);
 						     Main.cars.remove(thisCar);
+						     //thisCar.getRect().getBoundsInLocal().
 					    }
 					}
 			
@@ -200,7 +204,7 @@ public class Car extends Pane {
 	public boolean isStopped() {
 		return stopped;
 	}
-	
+
 	public double getxLength() {
 		return xLength;
 	}
