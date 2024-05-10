@@ -13,8 +13,8 @@ import javafx.util.Duration;
 
 public class Car extends Pane {
 	public static int crashCounter;
-	private double xLength = 16;
-	private double yLength = 9;
+	private double xLength = 14;
+	private double yLength = 7;
 	private boolean stopped;
 	private int pathNo;
 
@@ -34,28 +34,23 @@ public class Car extends Pane {
 	public Car(Path path, double pathLength, int pathNo) {
 		thisCar = this;
 		this.getChildren().addAll(rect,collider);
-		rect.setArcHeight(5);
-		rect.setArcWidth(5);
-		rect.setArcHeight(5);
-		rect.setArcWidth(5);
+		rect.setArcHeight(2);
+		rect.setArcWidth(2);
+		rect.setOpacity(0);
 		collider.setTranslateX(15);
-		//collider.setTranslateY(-1);
-		collider.setFill(null);
-		//collider.setOpacity(0.8);
+		
 		pt.setNode(this);
 		pt.setPath(path);
-
+		
 		this.pathNo = pathNo;
 		pt.setDuration(Duration.millis(pathLength * 15));
 		pt.setInterpolator(Interpolator.LINEAR);
-		//pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
+		pt.setOrientation(OrientationType.ORTHOGONAL_TO_TANGENT);
 		
 		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-			//	System.out.println(rect.getLocalToSceneTransform().getTx());
-				//stop at traffic lights
 				if (!stopped) { // aracın ışıktan kaynaklı durma olayı
 					double frontX;
 					double frontY;
@@ -165,8 +160,9 @@ public class Car extends Pane {
 					if(dd!= thisCar && Main.cars.contains(thisCar)) {							
 						boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
 					  if(intersects && firstControll && dd.firstControll) {
-						  System.out.println("çarpışma oldu ");
+						  	System.out.println("çarpışma oldu ");
 						     crashCounter++;
+						     Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident()));
 						     Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
 					         thisCar.pt.stop();
 					         dd.pt.stop();
@@ -187,6 +183,11 @@ public class Car extends Pane {
 						firstControll = true;
 					}
 				}
+				if(!firstControll) { // trafik sıkışıksa araç spawn etme
+					if(firstControllCounter >= 3) {
+						rect.setOpacity(1);
+					}
+				}
 				
 				
 			}
@@ -195,6 +196,8 @@ public class Car extends Pane {
 
 		pt.setOnFinished(e -> {
 			Main.finishedCars++;
+			Main.scoreText.setText(String.format("Score: %d/%d", Main.finishedCars,Main.meta.getWinCondition()));
+			Main.controlWin(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
 			Main.a.getChildren().remove(this);
 			Main.cars.remove(this);
 		});
