@@ -1,3 +1,4 @@
+
 import java.io.File;
 
 import javafx.animation.AnimationTimer;
@@ -48,6 +49,35 @@ public class Car extends Pane {
 		rect.setOpacity(0);
 		collider.setTranslateX(15);
 		collider.setOpacity(0);
+		
+		//Getting a random car color
+		switch((int)(Math.random()*8)) {
+		case 0:
+			rect.setFill(Color.DARKGREEN);
+			break;
+		case 1:
+			rect.setFill(Color.BLUE);
+			break;
+		case 2:
+			rect.setFill(Color.DARKRED);
+			break;
+		case 3:
+			rect.setFill(Color.PURPLE);
+			break;
+		case 4:
+			rect.setFill(Color.LIGHTSKYBLUE);
+			break;
+		case 5:
+			rect.setFill(Color.MAGENTA);
+			break;
+		case 6:
+			rect.setFill(Color.CYAN);
+			break;
+		case 7:
+			rect.setFill(Color.DARKORANGE);
+			break;
+		}
+		
 		
 		pt.setNode(this); // Assign Path transaction object as vehicle
 		pt.setPath(path);
