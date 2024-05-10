@@ -47,6 +47,7 @@ public class Car extends Pane {
 		rect.setArcWidth(2);
 		rect.setOpacity(0);
 		collider.setTranslateX(15);
+		collider.setOpacity(0);
 		
 		pt.setNode(this);
 		pt.setPath(path);
