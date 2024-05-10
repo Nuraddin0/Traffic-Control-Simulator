@@ -27,13 +27,13 @@ public class Car extends Pane {
 
 	private Rectangle collider = new Rectangle(5, 7); // Checking for stop
 
-	private TrafficLight stoppedTraficLight;
-	private Car stoppedCar;
+	private TrafficLight stoppedTraficLight; // The light that caused it to stop
+	private Car stoppedCar; // The vehicle that caused it to stop
 
-	private Rectangle rect = new Rectangle(xLength, yLength);
+	private Rectangle rect = new Rectangle(xLength, yLength); // main rectangle ( car body ) 
 	public PathTransition pt = new PathTransition();
 
-	private Car thisCar;
+	private Car thisCar; // We found such a solution because animation is detected when we call the tool as "this" in animation.
 
 	public Car(Path path, double pathLength, int pathNo) {
 		String audioFile = "sounds/car-crash-collision.mp3";
@@ -49,7 +49,7 @@ public class Car extends Pane {
 		collider.setTranslateX(15);
 		collider.setOpacity(0);
 		
-		pt.setNode(this);
+		pt.setNode(this); // Assign Path transaction object as vehicle
 		pt.setPath(path);
 		
 		this.pathNo = pathNo;
@@ -152,7 +152,7 @@ public class Car extends Pane {
 									Main.cars.remove(thisCar);
 									Main.a.getChildren().remove(thisCar);
 								}
-								break; // kendi pathinde olmayan araç spawn edildiğinde hareket etmesin diye direkt olarak for'dan çık ve diğer araçları kontrol etme 
+								break; // When a vehicle that is not on its own path is spawned, exit the for directly and do not control other vehicles so that it does not move.
 							}
 						}
 						else if(stopped){
@@ -167,23 +167,24 @@ public class Car extends Pane {
 			  
 				for(int i = 0 ; i < Main.cars.size(); i++) {
 					Car dd  = Main.cars.get(i);
-					if(dd!= thisCar && Main.cars.contains(thisCar)) {							
+					if(dd!= thisCar && Main.cars.contains(thisCar)) { // If our vehicle is not equal to itself at the moment and has been involved in an accident before and is not deleted from the array list and still continues to exist							
 						boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
-					  	if(intersects && firstControll && dd.firstControll) {
+						// If the location of our vehicle's rectangle's local area relative to the scene intersects with the location of the local area of ​​the other vehicle's rectangle relative to the scene
+					  	if(intersects && firstControll && dd.firstControll) { // If there is an intersection and it is not due to vehicle congestion
 							mediaPlayer.seek(Duration.seconds(0));
 							mediaPlayer.play();
 							
 					  		System.out.println("çarpışma oldu ");
-						     	crashCounter++;
-						     	Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident()));
-						     	Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
-					         	thisCar.pt.stop();
-					         	dd.pt.stop();
-				             		Main.a.getChildren().remove(thisCar);
+						     	crashCounter++; // increase the number of accidents
+						     	Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident())); // update crashed text
+						     	Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage); // check losing condition
+					         	thisCar.pt.stop(); // animation stop
+					         	dd.pt.stop(); 
+				             		Main.a.getChildren().remove(thisCar); // remove the cars from pane
 					         	Main.a.getChildren().remove( dd);
 						     	Main.cars.remove( dd);
 						     	Main.cars.remove(thisCar);
-						     	//thisCar.getRect().getBoundsInLocal().
+					
 					    }
 					}
 				}
