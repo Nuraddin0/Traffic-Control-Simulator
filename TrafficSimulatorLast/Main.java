@@ -701,7 +701,9 @@ public class Main extends Application {
 		/* It checks whether the user has lost the level he is on by looking at the number of accidents he has made. 
                    If the user lose,  are given the opportunity to return to the level selection menu or replay the level.*/
 		if (Car.crashCounter == meta1.getAllowedAccident()) {
-
+                        for (int i = 0; i < cars.size(); i++) {
+				cars.get(i).pt.stop();
+			}
 			try {
 				animation.stop();
 			} catch (Exception e1) {
@@ -822,7 +824,9 @@ public class Main extends Application {
                   If the user wins, they are given the opportunity to return to the level selection menu or move on to the next level */
 		
 		if(Main.finishedCars==meta.getWinCondition()) {
-
+                        for (int i = 0; i < cars.size(); i++) {
+				cars.get(i).pt.stop();
+			}
 			try {
 				animation.stop();
 			} catch (Exception e1) {
