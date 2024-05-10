@@ -28,7 +28,8 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-// 150122025	Sabri Yücel  
+
+// 150122025	Sabri Yıldız
 // 150123992	Nureddin Abbasov
 // 150122071	Mehmet Burak İşgören
 public class Main extends Application {
@@ -49,7 +50,7 @@ public class Main extends Application {
 	public static String currentLevelName;
 	public static Stage primaryStage;
 	public static Label scoreText;
-	public static Label crashText ; 
+	public static Label crashText;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -125,9 +126,9 @@ public class Main extends Application {
 		mainMenu.getChildren().add(exitGame);
 
 		Scene sceneMainMenu = new Scene(mainMenu, 800, 800);
-		
+
 		primaryStage.setScene(sceneMainMenu);
-		
+
 		startGame.setCursor(Cursor.HAND);
 		exitGame.setCursor(Cursor.HAND);
 
@@ -169,7 +170,7 @@ public class Main extends Application {
 			mainMenu.getChildren().addAll(rec, text, btYes, btNo);
 
 			btYes.setOnMouseEntered(event -> { // when the mouse comes over the button
-                                                           // The button is run away so that the user cannot press it.
+												// The button is run away so that the user cannot press it.
 				Random rand = new Random();
 				int randX = rand.nextInt(50, 750);
 				int randY = rand.nextInt(50, 750);
@@ -201,7 +202,7 @@ public class Main extends Application {
 			FadeTransition fadeOut1 = new FadeTransition(Duration.seconds(0.5), startGame);
 			FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(0.5), exitGame);
 			FadeTransition fadeOut3 = new FadeTransition(Duration.seconds(0.5), header);
-			
+
 			fadeOut1.setFromValue(1.0);
 			fadeOut1.setToValue(0.0);
 			fadeOut2.setFromValue(1.0);
@@ -232,10 +233,11 @@ public class Main extends Application {
 
 		double previousPathX = 0;
 		double previousPathY = 0;
-		
+
 		while (scan.hasNext()) { // keep reading txt file until you see empty line
-			String tempString = scan.nextLine(); 
-			String[] words = tempString.split(" "); // Separate the words in the line you received according to the spaces
+			String tempString = scan.nextLine();
+			String[] words = tempString.split(" "); // Separate the words in the line you received according to the
+													// spaces
 			String className = words[0]; // first word is class name
 			if (className.equals("Metadata")) {
 				Double width = Double.parseDouble(words[1]);
@@ -291,8 +293,9 @@ public class Main extends Application {
 				}
 				if (words[2].equals("LineTo")) {
 					paths[index].getElements().add(new LineTo(pathX, pathY));
-					pathsLength[index] += Math.sqrt(Math.pow(pathY - previousPathY, 2) + Math.pow(pathX - previousPathX, 2)); 
-	// paths.Length[ 0 ] = length of the first path within the same map
+					pathsLength[index] += Math
+							.sqrt(Math.pow(pathY - previousPathY, 2) + Math.pow(pathX - previousPathX, 2));
+					// paths.Length[ 0 ] = length of the first path within the same map
 					previousPathX = pathX;
 					previousPathY = pathY;
 				}
@@ -300,17 +303,24 @@ public class Main extends Application {
 			}
 		}
 
-		a = new SuperPane(meta.getSceneWidth(), meta.getSceneHeight(), meta.getNumberOfXCell(), meta.getNumberOfYCell());
-		
+		a = new SuperPane(meta.getSceneWidth(), meta.getSceneHeight(), meta.getNumberOfXCell(),
+				meta.getNumberOfYCell());
+
 		scoreText = new Label();
-		scoreText.setText(String.format("Score: %d/%d", finishedCars,meta.getWinCondition())); // Presents the number of finished cars to the user instantly
+		scoreText.setText(String.format("Score: %d/%d", finishedCars, meta.getWinCondition())); // Presents the number
+																								// of finished cars to
+																								// the user instantly
 		scoreText.setTranslateX(10);
 		scoreText.setTranslateY(10);
 		scoreText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
 		a.getChildren().add(scoreText);
-		
+
 		crashText = new Label();
-		crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,meta.getAllowedAccident()));// Presents the number of accidents to the user instantly
+		crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter, meta.getAllowedAccident()));// Presents the
+																										// number of
+																										// accidents to
+																										// the user
+																										// instantly
 		crashText.setTranslateX(10);
 		crashText.setTranslateY(25);
 		crashText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
@@ -337,7 +347,10 @@ public class Main extends Application {
 		int pathCount = paths.length;
 		MetaData meta1 = meta;
 
-		animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> { // Create a vehicle at 1 second intervals and if the created vehicle is not null, add the vehicle to the pane and add it to the arraylist.
+		animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> { // Create a vehicle at 1 second intervals
+																			// and if the created vehicle is not null,
+																			// add the vehicle to the pane and add it to
+																			// the arraylist.
 			Car newCar = spawnCar(pathCount);
 			if (newCar != null) {
 				a.getChildren().add(newCar);
@@ -348,14 +361,16 @@ public class Main extends Application {
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.play();
 
-		back.setOnMouseClicked(e -> { // If the user wants to go back to the level selection menu while on a level, reset everything, stop the animation and redirect to the level selection menu.
-			finishedCars=0;
-			Car.crashCounter=0;
+		back.setOnMouseClicked(e -> { // If the user wants to go back to the level selection menu while on a level,
+										// reset everything, stop the animation and redirect to the level selection
+										// menu.
+			finishedCars = 0;
+			Car.crashCounter = 0;
 			animation.stop();
 			finito(roadtiles, buildings);
 			levelSelect(primaryStage);
 		});
-		scan.close(); 
+		scan.close();
 		return scene;
 
 	}
@@ -456,7 +471,7 @@ public class Main extends Application {
 			FadeTransition fadeOut5 = new FadeTransition(Duration.seconds(0.5), level3);
 			FadeTransition fadeOut6 = new FadeTransition(Duration.seconds(0.5), level4);
 			FadeTransition fadeOut7 = new FadeTransition(Duration.seconds(0.5), level5);
-			
+
 			fadeOut1.setFromValue(1.0);
 			fadeOut1.setToValue(0.0);
 			fadeOut2.setFromValue(1.0);
@@ -485,13 +500,16 @@ public class Main extends Application {
 			});
 
 		});
-                // We will set the click states for both the button and the image.
-		/*   Even if there were no buttons, the transparent frame would not detect a press when pressed. 
-                     Buttons have also been added to detect clicks when pressing the entire frame*/
+		// We will set the click states for both the button and the image.
+		/*
+		 * Even if there were no buttons, the transparent frame would not detect a press
+		 * when pressed. Buttons have also been added to detect clicks when pressing the
+		 * entire frame
+		 */
 		btLevel1.setOnMouseClicked(e -> { // If the user wants to play Level1
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level1.txt", primaryStage);
@@ -505,7 +523,7 @@ public class Main extends Application {
 		btLevel2.setOnMouseClicked(e -> {// If the user wants to play Level2
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level2.txt", primaryStage);
@@ -519,7 +537,7 @@ public class Main extends Application {
 		btLevel3.setOnMouseClicked(e -> {// If the user wants to play Level3
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level3.txt", primaryStage);
@@ -547,7 +565,7 @@ public class Main extends Application {
 		btLevel5.setOnMouseClicked(e -> {// If the user wants to play Level5
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level5.txt", primaryStage);
@@ -576,7 +594,7 @@ public class Main extends Application {
 		level2.setOnMouseClicked(e -> {// If the user wants to play Level2
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level2.txt", primaryStage);
@@ -590,7 +608,7 @@ public class Main extends Application {
 		level3.setOnMouseClicked(e -> {// If the user wants to play Level3
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level3.txt", primaryStage);
@@ -604,7 +622,7 @@ public class Main extends Application {
 		level4.setOnMouseClicked(e -> {// If the user wants to play Level4
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level4.txt", primaryStage);
@@ -618,7 +636,7 @@ public class Main extends Application {
 		level5.setOnMouseClicked(e -> {// If the user wants to play Level5
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
-			
+
 			Scene level = null;
 			try {
 				level = openLevel("levels/level5.txt", primaryStage);
@@ -628,7 +646,7 @@ public class Main extends Application {
 			}
 			primaryStage.setScene(level);
 		});
-		
+
 		FadeTransition fadeIn1 = new FadeTransition(Duration.seconds(0.5), back);
 		FadeTransition fadeIn2 = new FadeTransition(Duration.seconds(0.5), header);
 		FadeTransition fadeIn3 = new FadeTransition(Duration.seconds(0.5), level1);
@@ -668,8 +686,12 @@ public class Main extends Application {
 
 	}
 
-	public static void finito(ArrayList roadtiles, ArrayList buildings) { /* It performs the task of returning from the map, clearing the objects left over from the previous situation 
-                                                                                in case of winning the level and moving to the next level, and ending the task.*/
+	public static void finito(ArrayList roadtiles,
+			ArrayList buildings) { /*
+									 * It performs the task of returning from the map, clearing the objects left
+									 * over from the previous situation in case of winning the level and moving to
+									 * the next level, and ending the task.
+									 */
 		for (int i = 0; i < cars.size(); i++) {
 			cars.get(i).pt.stop();
 		}
@@ -691,18 +713,22 @@ public class Main extends Application {
 		for (int i = 0; i < paths.length; i++) {
 			a.getChildren().remove(paths[i]);
 		}
-		cars.clear();   // clear arraylists
+		cars.clear(); // clear arraylists
 		roadtiles.clear();
 		buildings.clear();
 		lights.clear();
 	}
 
 	public static void controllLose(MetaData meta1, String levelName, Timeline animation, Stage primaryStage) {
-		/* It checks whether the user has lost the level he is on by looking at the number of accidents he has made. 
-                   If the user lose,  are given the opportunity to return to the level selection menu or replay the level.*/
+		/*
+		 * It checks whether the user has lost the level he is on by looking at the
+		 * number of accidents he has made. If the user lose, are given the opportunity
+		 * to return to the level selection menu or replay the level.
+		 */
 		if (Car.crashCounter == meta1.getAllowedAccident()) {
-                        for (int i = 0; i < cars.size(); i++) {
+			for (int i = 0; i < cars.size(); i++) {
 				cars.get(i).pt.stop();
+				a.getChildren().remove(cars.get(i));
 			}
 			try {
 				animation.stop();
@@ -717,7 +743,7 @@ public class Main extends Application {
 			rec.setHeight(100);
 			rec.setX(250);
 			rec.setY(350);
-			
+
 			Label text = new Label();
 			text.setText("You Lost !!");
 			text.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
@@ -726,28 +752,31 @@ public class Main extends Application {
 
 			Button btExit = new Button("Exit");
 			btExit.setCursor(Cursor.HAND);
-			btExit.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: red; -fx-font-weight: bold;");
+			btExit.setStyle(
+					"-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: red; -fx-font-weight: bold;");
 			btExit.setLayoutX(300);
 			btExit.setLayoutY(420);
 
 			Button btAgain = new Button("Again");
 			btAgain.setCursor(Cursor.HAND);
-			btAgain.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: green; -fx-font-weight: bold;");
+			btAgain.setStyle(
+					"-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: green; -fx-font-weight: bold;");
 			btAgain.setLayoutX(450);
 			btAgain.setLayoutY(420);
-			
+
 			a.getChildren().addAll(rec, text, btExit, btAgain);
-			
+
 			String audioFile = "sounds/button-click-sound.mp3";
 			Media media = new Media(new File(audioFile).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.setVolume(0.5);
-			
-			btExit.setOnMouseClicked(e1 -> { // If it wants to return to the level selection menu, delete and 
-				                         //reset the necessary data and objects and then redirect to the level selection menu.
+
+			btExit.setOnMouseClicked(e1 -> { // If it wants to return to the level selection menu, delete and
+				// reset the necessary data and objects and then redirect to the level selection
+				// menu.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
-				
+
 				Car.crashCounter = 0;
 				finishedCars = 0;
 				finito(roadtiles, buildings);
@@ -755,25 +784,26 @@ public class Main extends Application {
 				levelSelect(primaryStage);
 			});
 
-			btAgain.setOnMouseClicked(e1 -> { // If user wants to play again, clear everything, reset and open the current level again.
+			btAgain.setOnMouseClicked(e1 -> { // If user wants to play again, clear everything, reset and open the
+												// current level again.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
-				
+
 				Car.crashCounter = 0;
 				finishedCars = 0;
 				finito(roadtiles, buildings);
 				a.getChildren().removeAll(rec, text, btExit, btAgain);
-				
+
 				if (levelName.equals("levels/level1.txt")) {
 					try {
 						Scene level = null;
 						level = openLevel("levels/level1.txt", primaryStage);
 						currentLevelName = "levels/level1.txt";
 						primaryStage.setScene(level);
-						
+
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
+					}
 				} else if (levelName.equals("levels/level2.txt")) {
 					try {
 						Scene level = null;
@@ -783,7 +813,7 @@ public class Main extends Application {
 
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
+					}
 				} else if (levelName.equals("levels/level3.txt")) {
 					try {
 						Scene level = null;
@@ -793,7 +823,7 @@ public class Main extends Application {
 
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
+					}
 				} else if (levelName.equals("levels/level4.txt")) {
 					try {
 						Scene level = null;
@@ -803,7 +833,7 @@ public class Main extends Application {
 
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
+					}
 				} else if (levelName.equals("levels/level5.txt")) {
 					try {
 						Scene level = null;
@@ -819,20 +849,26 @@ public class Main extends Application {
 
 		}
 	}
-	public static void controlWin(MetaData meta, String levelName, Timeline animation, Stage primaryStage) { 
-		/* It checks whether the user has earned the current level by looking at the number of vehicles they have used to reach their destination.
-                  If the user wins, they are given the opportunity to return to the level selection menu or move on to the next level */
-		
-		if(Main.finishedCars==meta.getWinCondition()) {
-                        for (int i = 0; i < cars.size(); i++) {
+
+	public static void controlWin(MetaData meta, String levelName, Timeline animation, Stage primaryStage) {
+		/*
+		 * It checks whether the user has earned the current level by looking at the
+		 * number of vehicles they have used to reach their destination. If the user
+		 * wins, they are given the opportunity to return to the level selection menu or
+		 * move on to the next level
+		 */
+
+		if (Main.finishedCars == meta.getWinCondition()) {
+			for (int i = 0; i < cars.size(); i++) {
 				cars.get(i).pt.stop();
+				a.getChildren().remove(cars.get(i));
 			}
 			try {
 				animation.stop();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
+
 			Rectangle rec = new Rectangle();
 			rec.setArcWidth(25); // X ekseni boyunca yuvarlaklık
 			rec.setArcHeight(25);
@@ -841,7 +877,7 @@ public class Main extends Application {
 			rec.setHeight(100);
 			rec.setX(250);
 			rec.setY(350);
-			
+
 			Label text = new Label();
 			text.setText("YOU WON!!!");
 			text.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
@@ -850,33 +886,37 @@ public class Main extends Application {
 
 			Button btExit = new Button("Exit ");
 			btExit.setCursor(Cursor.HAND);
-			btExit.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: red; -fx-font-weight: bold;");
+			btExit.setStyle(
+					"-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: red; -fx-font-weight: bold;");
 			btExit.setLayoutX(330);
 			btExit.setLayoutY(420);
 
 			Button btNextLevel = new Button("Next Level");
 			btNextLevel.setCursor(Cursor.HAND);
-			btNextLevel.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: green; -fx-font-weight: bold;");
+			btNextLevel.setStyle(
+					"-fx-background-color: darkorange; -fx-font-size: 15px; -fx-text-fill: green; -fx-font-weight: bold;");
 			btNextLevel.setLayoutX(450);
 			btNextLevel.setLayoutY(420);
-			
+
 			a.getChildren().addAll(rec, text, btExit, btNextLevel);
-			
-			if(currentLevelName.equals("levels/level5.txt")) { // if user win the last level , onyl there will be exit buton 
+
+			if (currentLevelName.equals("levels/level5.txt")) { // if user win the last level , onyl there will be exit
+																// buton
 				a.getChildren().remove(btNextLevel);
 			}
-			 
+
 			String audioFile = "sounds/button-click-sound.mp3";
 			Media media = new Media(new File(audioFile).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.setVolume(0.5);
-			
+
 			btExit.setOnMouseClicked(e1 -> {
-				// If it wants to return to the level selection menu, delete and 
-			       //reset the necessary data and objects and then redirect to the level selection menu
+				// If it wants to return to the level selection menu, delete and
+				// reset the necessary data and objects and then redirect to the level selection
+				// menu
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
-				
+
 				Car.crashCounter = 0;
 				finishedCars = 0;
 				finito(roadtiles, buildings);
@@ -884,15 +924,16 @@ public class Main extends Application {
 				levelSelect(primaryStage);
 			});
 
-			btNextLevel.setOnMouseClicked(e1 -> { //If the user wants to move to another level, open the next level from the current level.
+			btNextLevel.setOnMouseClicked(e1 -> { // If the user wants to move to another level, open the next level
+													// from the current level.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
-				
+
 				Car.crashCounter = 0;
 				finishedCars = 0;
 				finito(roadtiles, buildings);
 				a.getChildren().removeAll(rec, text, btExit, btNextLevel);
-				
+
 				if (levelName.equals("levels/level1.txt")) {
 					try {
 						Scene level = openLevel("levels/level2.txt", primaryStage);
@@ -901,7 +942,7 @@ public class Main extends Application {
 
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
+					}
 				} else if (levelName.equals("levels/level2.txt")) {
 					try {
 						Scene level = openLevel("levels/level3.txt", primaryStage);
@@ -928,8 +969,8 @@ public class Main extends Application {
 
 					} catch (FileNotFoundException e2) {
 						e2.printStackTrace();
-					} 
-				} 
+					}
+				}
 			});
 		}
 	}
