@@ -31,7 +31,17 @@ public class TrafficLight extends Pane {
 		this.setTranslateX(x1);
 		this.setTranslateY(y1);
 		//this.setBackground(Background.fill(Color.YELLOW));
-		circle.setOnMousePressed(e -> changeColor());
+		
+		String audioFile = "sounds/Blip_select 1.wav";
+		Media media = new Media(new File(audioFile).toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setVolume(0.2);
+		
+		circle.setOnMousePressed(e -> {
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
+			changeColor();
+		});
 	}
 
 	private void changeColor() {
