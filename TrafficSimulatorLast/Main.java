@@ -46,6 +46,8 @@ public class Main extends Application {
 	public static MetaData meta = null;
 	public static String currentLevelName;
 	public static Stage primaryStage;
+	public static Label scoreText;
+	public static Label crashText ; 
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -72,7 +74,7 @@ public class Main extends Application {
 
 		primaryStage.setTitle("Traffic Control Simulator");
 		primaryStage.getIcons().add(icon);
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(true);
 		primaryStage.show();
 	}
 
@@ -122,10 +124,8 @@ public class Main extends Application {
 
 		Scene sceneMainMenu = new Scene(mainMenu, 800, 800);
 
-		fadeIn3.setOnFinished(e -> {
 			primaryStage.setScene(sceneMainMenu);
 
-		});
 
 		startGame.setCursor(Cursor.HAND);
 		exitGame.setCursor(Cursor.HAND);
@@ -281,6 +281,7 @@ public class Main extends Application {
 				double pathY = Double.parseDouble(words[4]);
 				if (words[2].equals("MoveTo")) {
 					paths[index] = new Path();
+					paths[index].setVisible(false);
 					paths[index].getElements().add(new MoveTo(pathX, pathY));
 					previousPathX = pathX;
 					previousPathY = pathY;
@@ -299,7 +300,19 @@ public class Main extends Application {
 
 		a = new SuperPane(meta.getSceneWidth(), meta.getSceneHeight(), meta.getNumberOfXCell(),
 				meta.getNumberOfYCell());
-
+		scoreText = new Label();
+		scoreText.setText(String.format("Score: %d/%d", finishedCars,meta.getWinCondition()));
+		scoreText.setTranslateX(10);
+		scoreText.setTranslateY(10);
+		scoreText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+		a.getChildren().add(scoreText);
+		crashText = new Label();
+		crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,meta.getAllowedAccident()));
+		crashText.setTranslateX(10);
+		crashText.setTranslateY(25);
+		crashText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+		a.getChildren().add(crashText);
+		
 		for (int i = 0; i < roadtiles.size(); i++) {
 			roadtiles.get(i).draw(meta);
 			a.add(roadtiles.get(i), roadtiles.get(i).getGridx(), roadtiles.get(i).getGridy());
@@ -323,7 +336,7 @@ public class Main extends Application {
 		MetaData meta1 = meta;
 		System.out.println("animationa kadar gelindi");
 
-		animation = new Timeline(new KeyFrame(Duration.millis(500), e -> { // ANIMATION
+		animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> { // ANIMATION
 			Car newCar = spawnCar(pathCount);
 			if (newCar != null) {
 				a.getChildren().add(newCar);
@@ -335,6 +348,8 @@ public class Main extends Application {
 		animation.play();
 
 		back.setOnMouseClicked(e -> {
+			finishedCars=0;
+			Car.crashCounter=0;
 			animation.stop();// Animasyonu durdur
 			finito(roadtiles, buildings);
 			levelSelect(primaryStage); // level seçme menüsüne dön
@@ -638,10 +653,8 @@ public class Main extends Application {
 		levelPane.getChildren().addAll(back, header, level1, level2, level3, level4, level5);
 		levelPane.getChildren().addAll(btLevel1, btLevel2, btLevel3, btLevel4, btLevel5);
 
-		fadeIn7.setOnFinished(e -> {
 			primaryStage.setScene(levelMenu);
 
-		});
 	}
 
 	public static void finito(ArrayList roadtiles, ArrayList buildings) {
@@ -702,24 +715,26 @@ public class Main extends Application {
 			btYes.setLayoutX(330);
 			btYes.setLayoutY(420);
 
-			Button btAgain = new Button("Again");
-			btAgain.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
-			btAgain.setLayoutX(450);
-			btAgain.setLayoutY(420);
-			a.getChildren().addAll(rec, text, btYes, btAgain);
+			Button btNextLevel = new Button("Again");
+			btNextLevel.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
+			btNextLevel.setLayoutX(450);
+			btNextLevel.setLayoutY(420);
+			a.getChildren().addAll(rec, text, btYes, btNextLevel);
 			btYes.setOnMouseClicked(e1 -> {
 				Car.crashCounter = 0;
+				finishedCars = 0;
 				finito(roadtiles, buildings);
-				a.getChildren().removeAll(rec, text, btYes, btAgain);
+				a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 				levelSelect(primaryStage);
 			});
 
-			btAgain.setOnMouseClicked(e1 -> {
+			btNextLevel.setOnMouseClicked(e1 -> {
 				if (levelName.equals("level1.txt")) {
 					try {
 						Car.crashCounter = 0;
+						finishedCars = 0;
 						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btAgain);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 
 						Scene level = null;
 						level = openLevel("level1.txt", primaryStage);
@@ -736,8 +751,9 @@ public class Main extends Application {
 				} else if (levelName.equals("level2.txt")) {
 					try {
 						Car.crashCounter = 0;
+						finishedCars = 0;
 						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btAgain);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 
 						Scene level = null;
 						level = openLevel("level2.txt", primaryStage);
@@ -754,8 +770,9 @@ public class Main extends Application {
 				} else if (levelName.equals("level3.txt")) {
 					try {
 						Car.crashCounter = 0;
+						finishedCars = 0;
 						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btAgain);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 
 						Scene level = null;
 						level = openLevel("level3.txt", primaryStage);
@@ -772,8 +789,9 @@ public class Main extends Application {
 				} else if (levelName.equals("level4.txt")) {
 					try {
 						Car.crashCounter = 0;
+						finishedCars = 0;
 						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btAgain);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 
 						Scene level = null;
 						level = openLevel("level4.txt", primaryStage);
@@ -790,8 +808,9 @@ public class Main extends Application {
 				} else if (levelName.equals("level5.txt")) {
 					try {
 						Car.crashCounter = 0;
+						finishedCars = 0;
 						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btAgain);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
 
 						Scene level = null;
 						level = openLevel("level5.txt", primaryStage);
@@ -810,5 +829,130 @@ public class Main extends Application {
 
 		}
 	}
+	public static void controlWin(MetaData meta, String levelName, Timeline animation, Stage primaryStage) {
+		if(Main.finishedCars==meta.getWinCondition()) {
+			System.out.println("controllWin çALIŞTIIIIIIIIII");
 
+			try {
+				animation.stop();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Rectangle rec = new Rectangle();
+			rec.setArcWidth(25); // X ekseni boyunca yuvarlaklık
+			rec.setArcHeight(25);
+			rec.setFill(Color.DARKORANGE);
+			rec.setWidth(300);
+			rec.setHeight(100);
+			rec.setX(250);
+			rec.setY(350);
+			Label text = new Label();
+			text.setText("YOU WIN!!!");
+			text.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+			text.setLayoutX(275);
+			text.setLayoutY(355);
+
+			Button btYes = new Button("Exit ");
+			btYes.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
+			btYes.setLayoutX(330);
+			btYes.setLayoutY(420);
+
+			Button btNextLevel = new Button("Next Level");
+			btNextLevel.setStyle("-fx-background-color: darkorange; -fx-font-size: 15px");
+			btNextLevel.setLayoutX(450);
+			btNextLevel.setLayoutY(420);
+			a.getChildren().addAll(rec, text, btYes, btNextLevel);
+			if(currentLevelName.equals("level5.txt")) {
+				a.getChildren().remove(btNextLevel);
+			}
+			btYes.setOnMouseClicked(e1 -> {
+				Car.crashCounter = 0;
+				finishedCars = 0;
+				finito(roadtiles, buildings);
+				a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+				levelSelect(primaryStage);
+			});
+
+			btNextLevel.setOnMouseClicked(e1 -> {
+				if (levelName.equals("level1.txt")) {
+					try {
+						Car.crashCounter = 0;
+						finishedCars = 0;
+						finito(roadtiles, buildings);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+
+						Scene level = null;
+						level = openLevel("level2.txt", primaryStage);
+						currentLevelName = "level2.txt";
+						primaryStage.setScene(level);
+
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				} else if (levelName.equals("level2.txt")) {
+					try {
+						Car.crashCounter = 0;
+						finishedCars = 0;
+						finito(roadtiles, buildings);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+
+						Scene level = null;
+						level = openLevel("level3.txt", primaryStage);
+						currentLevelName = "level3.txt";
+						primaryStage.setScene(level);
+
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				} else if (levelName.equals("level3.txt")) {
+					try {
+						Car.crashCounter = 0;
+						finishedCars = 0;
+						finito(roadtiles, buildings);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+
+						Scene level = null;
+						level = openLevel("level4.txt", primaryStage);
+						currentLevelName = "level4.txt";
+						primaryStage.setScene(level);
+
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				} else if (levelName.equals("level4.txt")) {
+					try {
+						Car.crashCounter = 0;
+						finishedCars = 0;
+						finito(roadtiles, buildings);
+						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+
+						Scene level = null;
+						level = openLevel("level5.txt", primaryStage);
+						currentLevelName = "level5.txt";
+						primaryStage.setScene(level);
+
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				} 
+			});
+		}
+	}
 }
