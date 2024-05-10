@@ -32,6 +32,11 @@ public class Car extends Pane {
 	private Car thisCar;
 
 	public Car(Path path, double pathLength, int pathNo) {
+		String audioFile = "sounds/car-crash-collision.mp3";
+		Media media = new Media(new File(audioFile).toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setVolume(0.3);
+		
 		thisCar = this;
 		this.getChildren().addAll(rect,collider);
 		rect.setArcHeight(2);
@@ -159,23 +164,24 @@ public class Car extends Pane {
 					Car dd  = Main.cars.get(i);
 					if(dd!= thisCar && Main.cars.contains(thisCar)) {							
 						boolean intersects = thisCar.localToScene(thisCar.getRect().getBoundsInLocal()).intersects(dd.localToScene(dd.getRect().getBoundsInLocal()));
-					  if(intersects && firstControll && dd.firstControll) {
-						  	System.out.println("çarpışma oldu ");
-						     crashCounter++;
-						     Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident()));
-						     Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
-					         thisCar.pt.stop();
-					         dd.pt.stop();
-				             Main.a.getChildren().remove(thisCar);
-					         Main.a.getChildren().remove( dd);
-						     Main.cars.remove( dd);
-						     Main.cars.remove(thisCar);
-						     //thisCar.getRect().getBoundsInLocal().
+					  	if(intersects && firstControll && dd.firstControll) {
+							mediaPlayer.seek(Duration.seconds(0));
+							mediaPlayer.play();
+							
+					  		System.out.println("çarpışma oldu ");
+						     	crashCounter++;
+						     	Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident()));
+						     	Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage);
+					         	thisCar.pt.stop();
+					         	dd.pt.stop();
+				             		Main.a.getChildren().remove(thisCar);
+					         	Main.a.getChildren().remove( dd);
+						     	Main.cars.remove( dd);
+						     	Main.cars.remove(thisCar);
+						     	//thisCar.getRect().getBoundsInLocal().
 					    }
 					}
-			
 				}
-				
 				
 				if(!firstControll) { // trafik sıkışıksa araç spawn etme
 					firstControllCounter++;
@@ -188,8 +194,6 @@ public class Car extends Pane {
 						rect.setOpacity(1);
 					}
 				}
-				
-				
 			}
 		};
 		timer.start();
