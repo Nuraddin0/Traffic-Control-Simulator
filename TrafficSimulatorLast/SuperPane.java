@@ -22,7 +22,7 @@ public class SuperPane extends Pane{
 		gridHeight = height/numberOfCellsY;
 		for(int i = 0; i < numberOfCellsX;i++) {
 			for(int j = 0; j < numberOfCellsY; j++) {
-				Rectangle rect = new Rectangle(i*gridWidth,j*gridHeight,gridWidth,gridHeight);
+				Rectangle rect = new Rectangle(i*gridWidth,j*gridHeight,gridWidth,gridHeight); // background is actualyy rectangle . we add all of them
 				rect.setStroke(Color.GREY);
 				rect.setStrokeWidth(0.5);
 				rect.setOpacity(0.8);
@@ -32,13 +32,13 @@ public class SuperPane extends Pane{
 		}
 	}
 	
-	public void add(Shape shape,int x, int y) {
+	public void add(Shape shape,int x, int y) { // shapes are added to correct position according to superpane
 		shape.setTranslateX(x*gridWidth);
 		shape.setTranslateY(y*gridHeight);
 		this.getChildren().add(shape);
 	}
 	
-	public void add(Pane pane,int x, int y) {
+	public void add(Pane pane,int x, int y) {// panes are added to correct position according to superpane
 		pane.setTranslateX(x*gridWidth);
 		pane.setTranslateY(y*gridHeight);
 		this.getChildren().add(pane);
