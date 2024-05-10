@@ -74,7 +74,7 @@ public class Main extends Application {
 
 		primaryStage.setTitle("Traffic Control Simulator");
 		primaryStage.getIcons().add(icon);
-		primaryStage.setResizable(true);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
@@ -123,10 +123,9 @@ public class Main extends Application {
 		mainMenu.getChildren().add(exitGame);
 
 		Scene sceneMainMenu = new Scene(mainMenu, 800, 800);
-
-			primaryStage.setScene(sceneMainMenu);
-
-
+		
+		primaryStage.setScene(sceneMainMenu);
+		
 		startGame.setCursor(Cursor.HAND);
 		exitGame.setCursor(Cursor.HAND);
 
@@ -200,6 +199,7 @@ public class Main extends Application {
 			FadeTransition fadeOut1 = new FadeTransition(Duration.seconds(0.5), startGame);
 			FadeTransition fadeOut2 = new FadeTransition(Duration.seconds(0.5), exitGame);
 			FadeTransition fadeOut3 = new FadeTransition(Duration.seconds(0.5), header);
+			
 			fadeOut1.setFromValue(1.0);
 			fadeOut1.setToValue(0.0);
 			fadeOut2.setFromValue(1.0);
@@ -221,7 +221,6 @@ public class Main extends Application {
 	public static Scene openLevel(String levelName, Stage primaryStage) throws FileNotFoundException {
 
 		ImageView back = new ImageView(new Image("/back.png"));
-		System.out.println("geldiiiiiiiiiiiiiiiiiiiiii");
 		back.setX(0);
 		back.setY(800 - 51);
 
@@ -230,6 +229,7 @@ public class Main extends Application {
 
 		double previousPathX = 0;
 		double previousPathY = 0;
+		
 		while (scan.hasNext()) {
 			String tempString = scan.nextLine();
 			String[] words = tempString.split(" ");
@@ -455,6 +455,7 @@ public class Main extends Application {
 			FadeTransition fadeOut5 = new FadeTransition(Duration.seconds(0.5), level3);
 			FadeTransition fadeOut6 = new FadeTransition(Duration.seconds(0.5), level4);
 			FadeTransition fadeOut7 = new FadeTransition(Duration.seconds(0.5), level5);
+			
 			fadeOut1.setFromValue(1.0);
 			fadeOut1.setToValue(0.0);
 			fadeOut2.setFromValue(1.0);
@@ -487,12 +488,12 @@ public class Main extends Application {
 		btLevel1.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level1.txt", primaryStage);
 				currentLevelName = "level1.txt";
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -501,12 +502,12 @@ public class Main extends Application {
 		btLevel2.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level2.txt", primaryStage);
 				currentLevelName = "level2.txt";
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -515,12 +516,12 @@ public class Main extends Application {
 		btLevel3.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level3.txt", primaryStage);
 				currentLevelName = "level3.txt";
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -543,12 +544,12 @@ public class Main extends Application {
 		btLevel5.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level5.txt", primaryStage);
 				currentLevelName = "level5.txt";
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -570,11 +571,11 @@ public class Main extends Application {
 		level2.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level2.txt", primaryStage);
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -583,11 +584,11 @@ public class Main extends Application {
 		level3.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level3.txt", primaryStage);
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -596,11 +597,11 @@ public class Main extends Application {
 		level4.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level4.txt", primaryStage);
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -609,11 +610,11 @@ public class Main extends Application {
 		level5.setOnMouseClicked(e -> {
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
+			
 			Scene level = null;
 			try {
 				level = openLevel("level5.txt", primaryStage);
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			primaryStage.setScene(level);
@@ -653,7 +654,7 @@ public class Main extends Application {
 		levelPane.getChildren().addAll(back, header, level1, level2, level3, level4, level5);
 		levelPane.getChildren().addAll(btLevel1, btLevel2, btLevel3, btLevel4, btLevel5);
 
-			primaryStage.setScene(levelMenu);
+		primaryStage.setScene(levelMenu);
 
 	}
 
@@ -818,10 +819,8 @@ public class Main extends Application {
 						primaryStage.setScene(level);
 
 					} catch (FileNotFoundException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					} catch (Exception e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				}
@@ -836,7 +835,6 @@ public class Main extends Application {
 			try {
 				animation.stop();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			Rectangle rec = new Rectangle();
@@ -875,80 +873,57 @@ public class Main extends Application {
 			});
 
 			btNextLevel.setOnMouseClicked(e1 -> {
+				Car.crashCounter = 0;
+				finishedCars = 0;
+				finito(roadtiles, buildings);
+				a.getChildren().removeAll(rec, text, btYes, btNextLevel);
+				
 				if (levelName.equals("level1.txt")) {
 					try {
-						Car.crashCounter = 0;
-						finishedCars = 0;
-						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
-
 						Scene level = null;
 						level = openLevel("level2.txt", primaryStage);
 						currentLevelName = "level2.txt";
 						primaryStage.setScene(level);
 
 					} catch (FileNotFoundException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					} catch (Exception e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} else if (levelName.equals("level2.txt")) {
 					try {
-						Car.crashCounter = 0;
-						finishedCars = 0;
-						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
-
 						Scene level = null;
 						level = openLevel("level3.txt", primaryStage);
 						currentLevelName = "level3.txt";
 						primaryStage.setScene(level);
 
 					} catch (FileNotFoundException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					} catch (Exception e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} else if (levelName.equals("level3.txt")) {
 					try {
-						Car.crashCounter = 0;
-						finishedCars = 0;
-						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
-
 						Scene level = null;
 						level = openLevel("level4.txt", primaryStage);
 						currentLevelName = "level4.txt";
 						primaryStage.setScene(level);
 
 					} catch (FileNotFoundException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					} catch (Exception e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} else if (levelName.equals("level4.txt")) {
 					try {
-						Car.crashCounter = 0;
-						finishedCars = 0;
-						finito(roadtiles, buildings);
-						a.getChildren().removeAll(rec, text, btYes, btNextLevel);
-
 						Scene level = null;
 						level = openLevel("level5.txt", primaryStage);
 						currentLevelName = "level5.txt";
 						primaryStage.setScene(level);
 
 					} catch (FileNotFoundException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					} catch (Exception e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				} 
