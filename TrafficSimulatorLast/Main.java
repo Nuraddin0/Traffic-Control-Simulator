@@ -28,10 +28,12 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
+// 150122025	Sabri Yücel  
+// 150123992	Nureddin Abbasov
+// 150122071	Mehmet Burak İşgören
 public class Main extends Application {
 
-	public static Path[] paths = new Path[0];
+	public static Path[] paths = new Path[0]; // Array that keeps the paths on the map and which we always update
 	public static ArrayList<TrafficLight> lights = new ArrayList<>();
 	public static ArrayList<Car> cars = new ArrayList<Car>();
 
@@ -134,14 +136,14 @@ public class Main extends Application {
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.setVolume(0.5);
 
-		exitGame.setOnMouseClicked(e -> {
+		exitGame.setOnMouseClicked(e -> { // If the player wants to exit the main menu
 
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 
 			Rectangle rec = new Rectangle();
-			rec.setArcWidth(25); // X ekseni boyunca yuvarlaklık
-			rec.setArcHeight(25);
+			rec.setArcWidth(25); // Roundness along the x-axis
+			rec.setArcHeight(25);// Roundness along the y-axis
 			rec.setFill(Color.DARKORANGE);
 			rec.setWidth(300);
 			rec.setHeight(100);
@@ -167,7 +169,7 @@ public class Main extends Application {
 			mainMenu.getChildren().addAll(rec, text, btYes, btNo);
 
 			btYes.setOnMouseEntered(event -> { // when the mouse comes over the button
-
+                                                           // The button is run away so that the user cannot press it.
 				Random rand = new Random();
 				int randX = rand.nextInt(50, 750);
 				int randY = rand.nextInt(50, 750);
@@ -187,11 +189,11 @@ public class Main extends Application {
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
 
-				mainMenu.getChildren().removeAll(rec, text, btYes, btNo);
+				mainMenu.getChildren().removeAll(rec, text, btYes, btNo); // If the user does not want to quit the game
 			});
 		});
 
-		startGame.setOnMouseClicked(e -> {
+		startGame.setOnMouseClicked(e -> { // If the user wants to switch to the game
 
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
@@ -212,14 +214,15 @@ public class Main extends Application {
 			fadeOut3.play();
 
 			fadeOut3.setOnFinished(event -> {
-				levelSelect(primaryStage);
+				levelSelect(primaryStage); // Go to level selection menu
 			});
 
 		});
 	}
 
 	public static Scene openLevel(String levelName, Stage primaryStage) throws FileNotFoundException {
-
+//This method opens and reads the appropriate txt file according to the level name parameter it receives, creates the necessary objects and displays them on the screen.
+//This is the exact method by which the map is opened.
 		ImageView back = new ImageView(new Image("images/back.png"));
 		back.setX(0);
 		back.setY(800 - 51);
@@ -230,10 +233,10 @@ public class Main extends Application {
 		double previousPathX = 0;
 		double previousPathY = 0;
 		
-		while (scan.hasNext()) {
-			String tempString = scan.nextLine();
-			String[] words = tempString.split(" ");
-			String className = words[0];
+		while (scan.hasNext()) { // keep reading txt file until you see empty line
+			String tempString = scan.nextLine(); 
+			String[] words = tempString.split(" "); // Separate the words in the line you received according to the spaces
+			String className = words[0]; // first word is class name
 			if (className.equals("Metadata")) {
 				Double width = Double.parseDouble(words[1]);
 				Double height = Double.parseDouble(words[2]);
@@ -287,10 +290,9 @@ public class Main extends Application {
 					previousPathY = pathY;
 				}
 				if (words[2].equals("LineTo")) {
-					// if(Math.abs(pathX-previousPathX)<1||Math.abs(pathY-previousPathY)<1) {
 					paths[index].getElements().add(new LineTo(pathX, pathY));
-					pathsLength[index] += Math
-							.sqrt(Math.pow(pathY - previousPathY, 2) + Math.pow(pathX - previousPathX, 2));
+					pathsLength[index] += Math.sqrt(Math.pow(pathY - previousPathY, 2) + Math.pow(pathX - previousPathX, 2)); 
+	// paths.Length[ 0 ] = length of the first path within the same map
 					previousPathX = pathX;
 					previousPathY = pathY;
 				}
@@ -301,19 +303,19 @@ public class Main extends Application {
 		a = new SuperPane(meta.getSceneWidth(), meta.getSceneHeight(), meta.getNumberOfXCell(), meta.getNumberOfYCell());
 		
 		scoreText = new Label();
-		scoreText.setText(String.format("Score: %d/%d", finishedCars,meta.getWinCondition()));
+		scoreText.setText(String.format("Score: %d/%d", finishedCars,meta.getWinCondition())); // Presents the number of finished cars to the user instantly
 		scoreText.setTranslateX(10);
 		scoreText.setTranslateY(10);
 		scoreText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
 		a.getChildren().add(scoreText);
 		
 		crashText = new Label();
-		crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,meta.getAllowedAccident()));
+		crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,meta.getAllowedAccident()));// Presents the number of accidents to the user instantly
 		crashText.setTranslateX(10);
 		crashText.setTranslateY(25);
 		crashText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
 		a.getChildren().add(crashText);
-		
+		// add all created objects to pane
 		for (int i = 0; i < roadtiles.size(); i++) {
 			roadtiles.get(i).draw(meta);
 			a.add(roadtiles.get(i), roadtiles.get(i).getGridx(), roadtiles.get(i).getGridy());
@@ -329,13 +331,13 @@ public class Main extends Application {
 			paths[i].setStroke(Color.RED);
 			a.getChildren().add(paths[i]);
 		}
-		a.getChildren().add(back); 
+		a.getChildren().add(back); // add back button
 
 		Scene scene = new Scene(a, meta.getSceneWidth(), meta.getSceneHeight());
 		int pathCount = paths.length;
 		MetaData meta1 = meta;
 
-		animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> { // ANIMATION
+		animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> { // Create a vehicle at 1 second intervals and if the created vehicle is not null, add the vehicle to the pane and add it to the arraylist.
 			Car newCar = spawnCar(pathCount);
 			if (newCar != null) {
 				a.getChildren().add(newCar);
@@ -346,20 +348,20 @@ public class Main extends Application {
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.play();
 
-		back.setOnMouseClicked(e -> {
+		back.setOnMouseClicked(e -> { // If the user wants to go back to the level selection menu while on a level, reset everything, stop the animation and redirect to the level selection menu.
 			finishedCars=0;
 			Car.crashCounter=0;
-			animation.stop();// Animasyonu durdur
+			animation.stop();
 			finito(roadtiles, buildings);
-			levelSelect(primaryStage); // level seçme menüsüne dön
+			levelSelect(primaryStage);
 		});
-		scan.close();
+		scan.close(); 
 		return scene;
 
 	}
 
 	public static Car spawnCar(int pathCount) {
-		if (Math.random() < 1) {
+		if (Math.random() < 1) { // Choose a random path from the level and create a car there.
 			int randomPath = ((int) (Math.random() * pathCount));
 			return new Car(paths[randomPath], pathsLength[randomPath], randomPath);
 		}
@@ -371,7 +373,7 @@ public class Main extends Application {
 		Pane levelPane = new Pane();
 		Scene levelMenu = new Scene(levelPane, 800, 800);
 
-		ImageView bg = new ImageView(new Image("images/anaMenu.jpg"));
+		ImageView bg = new ImageView(new Image("images/anaMenu.jpg")); // bg is background image
 		bg.setFitHeight(levelMenu.getHeight());
 		bg.setFitWidth(levelMenu.getWidth());
 
@@ -442,7 +444,7 @@ public class Main extends Application {
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.setVolume(0.5);
 
-		back.setOnMouseClicked(e -> {
+		back.setOnMouseClicked(e -> { // If the user wants to return to the starting menu from the level menu
 
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
@@ -483,8 +485,10 @@ public class Main extends Application {
 			});
 
 		});
-
-		btLevel1.setOnMouseClicked(e -> {
+                // We will set the click states for both the button and the image.
+		/*   Even if there were no buttons, the transparent frame would not detect a press when pressed. 
+                     Buttons have also been added to detect clicks when pressing the entire frame*/
+		btLevel1.setOnMouseClicked(e -> { // If the user wants to play Level1
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -498,7 +502,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		btLevel2.setOnMouseClicked(e -> {
+		btLevel2.setOnMouseClicked(e -> {// If the user wants to play Level2
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -512,7 +516,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		btLevel3.setOnMouseClicked(e -> {
+		btLevel3.setOnMouseClicked(e -> {// If the user wants to play Level3
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -526,7 +530,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		btLevel4.setOnMouseClicked(e -> {
+		btLevel4.setOnMouseClicked(e -> {// If the user wants to play Level4
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			Scene level = null;
@@ -540,7 +544,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		btLevel5.setOnMouseClicked(e -> {
+		btLevel5.setOnMouseClicked(e -> {// If the user wants to play Level5
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -554,7 +558,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		level1.setOnMouseClicked(e -> {
+		level1.setOnMouseClicked(e -> { // If the user wants to play Level1
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			Scene level = null;
@@ -569,7 +573,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		level2.setOnMouseClicked(e -> {
+		level2.setOnMouseClicked(e -> {// If the user wants to play Level2
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -583,7 +587,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		level3.setOnMouseClicked(e -> {
+		level3.setOnMouseClicked(e -> {// If the user wants to play Level3
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -597,7 +601,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		level4.setOnMouseClicked(e -> {
+		level4.setOnMouseClicked(e -> {// If the user wants to play Level4
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -611,7 +615,7 @@ public class Main extends Application {
 			primaryStage.setScene(level);
 		});
 
-		level5.setOnMouseClicked(e -> {
+		level5.setOnMouseClicked(e -> {// If the user wants to play Level5
 			mediaPlayer.seek(Duration.seconds(0));
 			mediaPlayer.play();
 			
@@ -664,8 +668,8 @@ public class Main extends Application {
 
 	}
 
-	public static void finito(ArrayList roadtiles, ArrayList buildings) {
-
+	public static void finito(ArrayList roadtiles, ArrayList buildings) { /* It performs the task of returning from the map, clearing the objects left over from the previous situation 
+                                                                                in case of winning the level and moving to the next level, and ending the task.*/
 		for (int i = 0; i < cars.size(); i++) {
 			cars.get(i).pt.stop();
 		}
@@ -687,13 +691,15 @@ public class Main extends Application {
 		for (int i = 0; i < paths.length; i++) {
 			a.getChildren().remove(paths[i]);
 		}
-		cars.clear();
+		cars.clear();   // clear arraylists
 		roadtiles.clear();
 		buildings.clear();
 		lights.clear();
 	}
 
 	public static void controllLose(MetaData meta1, String levelName, Timeline animation, Stage primaryStage) {
+		/* It checks whether the user has lost the level he is on by looking at the number of accidents he has made. 
+                   If the user lose,  are given the opportunity to return to the level selection menu or replay the level.*/
 		if (Car.crashCounter == meta1.getAllowedAccident()) {
 
 			try {
@@ -735,7 +741,8 @@ public class Main extends Application {
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.setVolume(0.5);
 			
-			btExit.setOnMouseClicked(e1 -> {
+			btExit.setOnMouseClicked(e1 -> { // If it wants to return to the level selection menu, delete and 
+				                         //reset the necessary data and objects and then redirect to the level selection menu.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
 				
@@ -746,7 +753,7 @@ public class Main extends Application {
 				levelSelect(primaryStage);
 			});
 
-			btAgain.setOnMouseClicked(e1 -> {
+			btAgain.setOnMouseClicked(e1 -> { // If user wants to play again, clear everything, reset and open the current level again.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
 				
@@ -810,7 +817,9 @@ public class Main extends Application {
 
 		}
 	}
-	public static void controlWin(MetaData meta, String levelName, Timeline animation, Stage primaryStage) {
+	public static void controlWin(MetaData meta, String levelName, Timeline animation, Stage primaryStage) { 
+		/* It checks whether the user has earned the current level by looking at the number of vehicles they have used to reach their destination.
+                  If the user wins, they are given the opportunity to return to the level selection menu or move on to the next level */
 		
 		if(Main.finishedCars==meta.getWinCondition()) {
 
@@ -849,16 +858,18 @@ public class Main extends Application {
 			
 			a.getChildren().addAll(rec, text, btExit, btNextLevel);
 			
-			if(currentLevelName.equals("levels/level5.txt")) {
+			if(currentLevelName.equals("levels/level5.txt")) { // if user win the last level , onyl there will be exit buton 
 				a.getChildren().remove(btNextLevel);
 			}
-			
+			 
 			String audioFile = "sounds/button-click-sound.mp3";
 			Media media = new Media(new File(audioFile).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.setVolume(0.5);
 			
 			btExit.setOnMouseClicked(e1 -> {
+				// If it wants to return to the level selection menu, delete and 
+			       //reset the necessary data and objects and then redirect to the level selection menu
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
 				
@@ -869,7 +880,7 @@ public class Main extends Application {
 				levelSelect(primaryStage);
 			});
 
-			btNextLevel.setOnMouseClicked(e1 -> {
+			btNextLevel.setOnMouseClicked(e1 -> { //If the user wants to move to another level, open the next level from the current level.
 				mediaPlayer.seek(Duration.seconds(0));
 				mediaPlayer.play();
 				
