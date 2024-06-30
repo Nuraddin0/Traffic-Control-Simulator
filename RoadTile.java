@@ -34,10 +34,10 @@ public class RoadTile extends Pane {
 			this.getChildren().add(line);
 			
 			Rotate rotate = new Rotate();
-			rotate.setPivotX(meta.getGridWidth()/2);
-		    rotate.setPivotY(meta.getGridHeight()/2);
-		    rotate.setAngle(this.rotate);
-		    this.getTransforms().add(rotate);
+			rotate.setPivotX(meta.getGridWidth()/2); // We set the exact middle as the rotation axis
+		        rotate.setPivotY(meta.getGridHeight()/2);
+		        rotate.setAngle(this.rotate);
+		        this.getTransforms().add(rotate);  // we rotate just pane
 		}
 		else if ( type==1) {
 			Arc arc = new Arc( 0, meta.getGridHeight(), meta.getGridHeight() * 0.9, meta.getGridHeight() * 0.9, 0,90 );
@@ -61,13 +61,13 @@ public class RoadTile extends Pane {
 			this.getChildren().add(mid);
 			
 			Rotate rotate = new Rotate();
-	        rotate.setPivotX(meta.getGridWidth()/2); 
+	        rotate.setPivotX(meta.getGridWidth()/2);  // We set the exact middle as the rotation axis
 	        rotate.setPivotY(meta.getGridHeight()/2); 
 	        rotate.setAngle(-(this.rotate)); 
 
 	        this.getTransforms().add(rotate);
 		}
-		else if ( type==2) {
+		else if ( type==2) { // it is actually have two rectangles
 			Rectangle x  = new Rectangle( 0, meta.getGridHeight()*0.1, meta.getGridWidth() , meta.getGridHeight() * 0.8 );					   
 			Rectangle secondX  = new Rectangle( 0, meta.getGridHeight()*0.1, meta.getGridWidth() , meta.getGridHeight() * 0.8 );
 			Circle circle = new Circle( meta.getGridWidth()/2, meta.getGridHeight()/2, meta.getGridWidth()*0.1);
