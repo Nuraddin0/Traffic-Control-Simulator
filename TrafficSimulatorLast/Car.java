@@ -65,7 +65,7 @@ public class Car extends Pane {
 			rect.setFill(Color.PURPLE);
 			break;
 		case 4:
-			rect.setFill(Color.LIGHTSKYBLUE);
+			rect.setFill(Color.BLACK);
 			break;
 		case 5:
 			rect.setFill(Color.MAGENTA);
@@ -203,8 +203,7 @@ public class Car extends Pane {
 					  	if(intersects && firstControll && dd.firstControll) { // If there is an intersection and it is not due to vehicle congestion
 							mediaPlayer.seek(Duration.seconds(0));
 							mediaPlayer.play();
-							
-					  		System.out.println("çarpışma oldu ");
+						
 						     	crashCounter++; // increase the number of accidents
 						     	Main.crashText.setText(String.format("Crashes: %d/%d", Car.crashCounter,Main.meta.getAllowedAccident())); // update crashed text
 						     	Main.controllLose(Main.meta, Main.currentLevelName, Main.animation,Main.primaryStage); // check losing condition

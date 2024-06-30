@@ -30,7 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 // 150122025	Sabri Yıldız
-// 150123992	Nureddin Abbasov
+// 150123992	Nuraddin Abbasov
 // 150122071	Mehmet Burak İşgören
 public class Main extends Application {
 
@@ -55,6 +55,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
+		
 		String audioFile = "sounds/MainMusic.mp3";
 		Media media = new Media(new File(audioFile).toURI().toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -86,6 +87,7 @@ public class Main extends Application {
 	}
 
 	public static void openMainMenu(Stage primaryStage) {
+		
 		Pane mainMenu = new Pane();
 		ImageView bg = new ImageView(new Image("images/anaMenu.jpg")); // bg is background image
 		bg.setFitHeight(mainMenu.getHeight());
@@ -93,6 +95,7 @@ public class Main extends Application {
 
 		ImageView header = new ImageView(new Image("images/tcs.png"));
 		header.setX(100);
+		
 		ImageView startGame = new ImageView(new Image("images/Start-Game.png"));
 		ImageView exitGame = new ImageView(new Image("images/Exit.png"));
 
@@ -173,7 +176,7 @@ public class Main extends Application {
 												// The button is run away so that the user cannot press it.
 				Random rand = new Random();
 				int randX = rand.nextInt(50, 750);
-				int randY = rand.nextInt(50, 750);
+				int randY = rand.nextInt(50, 750); 
 				btYes.setLayoutX(randX);
 				btYes.setLayoutY(randY);
 
@@ -225,6 +228,7 @@ public class Main extends Application {
 //This method opens and reads the appropriate txt file according to the level name parameter it receives, creates the necessary objects and displays them on the screen.
 //This is the exact method by which the map is opened.
 		ImageView back = new ImageView(new Image("images/back.png"));
+		back.setCursor(Cursor.HAND);
 		back.setX(0);
 		back.setY(800 - 51);
 
@@ -360,10 +364,15 @@ public class Main extends Application {
 
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.play();
-
+		String audioFile = "sounds/button-click-sound.mp3";
+		Media media = new Media(new File(audioFile).toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setVolume(0.5);
 		back.setOnMouseClicked(e -> { // If the user wants to go back to the level selection menu while on a level,
 										// reset everything, stop the animation and redirect to the level selection
 										// menu.
+			mediaPlayer.seek(Duration.seconds(0));
+			mediaPlayer.play();
 			finishedCars = 0;
 			Car.crashCounter = 0;
 			animation.stop();
